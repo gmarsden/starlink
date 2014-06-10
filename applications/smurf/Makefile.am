@@ -2,7 +2,8 @@
 
 # Build libsmf before the applications
 
-SUBDIRS = defaults libsmf libsmurf libsc2sim libacsis libaztec libgsd \
+SUBDIRS = defaults libsmf libsmurf libsc2sim libacsis libaztec libccatsim \
+          libgsd \
           libsmfftsio \
           libnanten \
           libsupercam \
@@ -58,6 +59,7 @@ fts2transcorr \
 gsd2acsis \
 gsdshow \
 impaztec \
+impccatsim \
 jsatileinfo \
 jsatilelist \
 jsadicer \
@@ -182,6 +184,7 @@ dist_pkgdata_DATA = LICENCE $(EXAMPLE_FILES)
 smurf_mon_LDADD = libsmurf/libsmurf.la libsc2sim/libsc2sim.la \
                   libgsd/libgsd.la \
                   libsmf/libsmf.la libaztec/libaztec.la \
+                  libccatsim/libccatsim.la \
                   libsmfftsio/libsmfftsio.la \
                   libnanten/libnanten.la \
                   libsupercam/libsupercam.la \

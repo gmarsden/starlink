@@ -35,6 +35,7 @@
 *     Ed Chapin (UBC)
 *     COBA: Coskun Oba (UoL)
 *     Matt Sherwood (UoL)
+*     AGM: Gaelen Marsden (UBC)
 *     {enter_new_authors_here}
 
 *  History:
@@ -173,12 +174,14 @@
 *        Call SUPERCAM2ACSIS
 *     2014-04-01 (TIMJ):
 *        Call NANTEN2ACSIS
+*     2014-06-09 (AGM):
+*        Call IMPCCATSIM
 *     {enter_further_changes_here}
 
 *  Copyright:
 *     Copyright (C) 2007-2012 Science and Technology Facilities Council.
 *     Copyright (C) 2005-2007 Particle Physics and Astronomy Research Council.
-*     Copyright (C) 2005-2008,2010-2011 University of British Columbia.
+*     Copyright (C) 2005-2008,2010-2011,2014 University of British Columbia.
 *     Copyright (C) 2014 Cornell University.
 *     All Rights Reserved.
 
@@ -363,6 +366,8 @@ void smurf_mon( int * status ) {
     smurf_gsdshow( status );
   } else if (strcmp( taskname, "IMPAZTEC" ) == 0 ) {
     smurf_impaztec( status );
+  } else if (strcmp( taskname, "IMPCCATSIM" ) == 0 ) {
+    smurf_impccatsim( status );
   } else if (strcmp( taskname, "JSADICER" ) == 0 ) {
     smurf_jsadicer( status );
   } else if (strcmp( taskname, "JSATILEINFO" ) == 0 ) {

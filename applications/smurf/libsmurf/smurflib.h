@@ -24,6 +24,7 @@
 *     Edward Chapin (UBC)
 *     COBA: Coskun Oba (UoL)
 *     Remo Tilanus (JAC, Hawaii)
+*     AGM: Gaelen Marsden (UBC)
 *     {enter_new_authors_here}
 
 *  History:
@@ -100,12 +101,14 @@
 *         Add sc2filtermap
 *     2014-03-19 (TIMJ):
 *         Add smurf_supercam2acsis
+*     2014-06-09 (AGM):
+*         Add smurf_impccatsim
 
 *     {enter_further_changes_here}
 
 *  Copyright:
 *     Copyright (C) 2007-2009 Science and Technology Facilities Council.
-*     Copyright (C) 2006,2008,2011 University of British Columbia.
+*     Copyright (C) 2006,2008,2011,2014 University of British Columbia.
 *     Copyright (C) 2005-2006 Particle Physics and Astronomy Research Council
 *     All Rights Reserved.
 
@@ -165,6 +168,7 @@ void smurf_fts2_transcorr( int * );
 void smurf_gsd2acsis( int * );
 void smurf_gsdshow( int * );
 void smurf_impaztec( int * );
+void smurf_impccatsim( int * );
 void smurf_jsadicer( int * );
 void smurf_jsatilelist( int * );
 void smurf_jsatileinfo( int * );

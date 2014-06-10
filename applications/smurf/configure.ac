@@ -97,6 +97,37 @@ AC_CHECK_LIB( [netcdf], [free_NC_attr], [], [
         echo "Warning! Couldn't find libnetcdf. impaztec task won't be available."
         ] )
 
+dnl Use --with-hdf5=/opt/local to append /opt/local to lib and include paths
+dnl Allow --with-hdf5=path to work
+dnl Note: code copied from netcdf above
+AC_ARG_WITH(hdf5,
+	[ --with-hdf5=path    Path to use for HDF5 libraries and include files ],
+	if test "$withval" = "yes"; then
+	  h5extrapath=default
+	elif test "$withval" = "no"; then
+	  h5extrapath=
+	else
+	  h5extrapath=$withval
+	fi,
+	h5extrapath=default)
+
+if test -n "$h5extrapath"; then
+	if test "$h5extrapath" != default; then
+	   CPPFLAGS="$CPPFLAGS -I$h5extrapath/include"
+	   LDFLAGS="$LDFLAGS -L$h5extrapath/lib"
+	fi
+fi
+
+dnl    hdf5 is optional - only needed for importing CCAT sim data files
+AC_CHECK_LIB( [hdf5], [H5open], [], [
+        echo "Warning! Couldn't find libhdf5. impccatsim task won't be available."
+        ] )
+
+dnl    also need hdf5_hl
+AC_CHECK_LIB( [hdf5_hl], [H5LTfind_dataset], [], [
+        echo "Warning! Couldn't find libhdf5_hl. impccatsim task won't be available."
+        ] )
+
 dnl    fail if we don't have ability to do memory mapping
 AC_CHECK_FUNCS( mmap msync munmap ftruncate, [], [
          echo "Error! Couldn't find mmap, msync, munmap or ftruncate"
@@ -130,7 +161,7 @@ AC_SUBST(DOCS_SUBDIRS)
 AC_CONFIG_FILES(Makefile smurf.ifd component.xml libsmurf/Makefile \
                 libsmf/Makefile libsc2sim/Makefile libacsis/Makefile \
                 libaztec/Makefile libgsd/Makefile libsc2fts/Makefile \
-                libsmfftsio/Makefile \
+                libccatsim/Makefile libsmfftsio/Makefile \
                 libnanten/Makefile \
                 libsupercam/Makefile \
                 docs/Makefile docs/sun258/Makefile docs/sun259/Makefile \

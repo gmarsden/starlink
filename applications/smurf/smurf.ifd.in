@@ -44,7 +44,7 @@
 
 #  Copyright:
 #     Copyright (C) 2007-2012 Science and Technology Facilities Council.
-#     Copyright (C) 2005-2009 University of British Columbia.
+#     Copyright (C) 2005-2009,1014 University of British Columbia.
 #     Copyright (C) 2005-2006 Particle Physics & Astronomy Research Council.
 #     All Rights Reserved.
 
@@ -72,6 +72,7 @@
 #     COBA: Coskun Oba (UoL)
 #     MJC: Malcolm J. Currie (JAC, Hawaii)
 #     MS: Matt Sherwood (UoL)
+#     AGM: Gaelen Marsden (UBC)
 #     {enter_new_authors_here}
 
 #  History:
@@ -282,6 +283,8 @@
 #     2014-04-17 (MS):
 #        Revise fts2spectrum resolution parameter to directly enter the desired spectral resolution value
 #        The default resolution is 0.005, but one could enter any sensible alternative as an override
+#     2014-06-09 (AGM):
+#        Add impccatsim task
 #     {enter_further_changes_here}
 
 #  Bugs:
@@ -2701,6 +2704,33 @@ package @PACKAGE@ {
                 access READ
                 vpath {PROMPT }
                 prompt {Input AzTEC NETCDF File}
+                ppath GLOBAL CURRENT
+                helpkey *
+            }
+
+            parameter out {
+                position 2
+                type _CHAR
+                access WRITE
+                vpath {PROMPT }
+                association ->GLOBAL.DATA_ARRAY
+                prompt {Output NDF file}
+                ppath GLOBAL CURRENT
+                helpkey *
+            }
+
+        }
+
+        action impccatsim {
+
+            helplib {$SMURF_HELP}
+
+            parameter in {
+                position 1
+                type _CHAR
+                access READ
+                vpath {PROMPT }
+                prompt {Input CCAT simulation HDF5 File}
                 ppath GLOBAL CURRENT
                 helpkey *
             }

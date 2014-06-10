@@ -38,6 +38,7 @@ smurf_fts2_transcorr.c \
 smurf_gsd2acsis.c \
 smurf_gsdshow.c \
 smurf_impaztec.c \
+smurf_impccatsim.c \
 smurf_jsadicer.c \
 smurf_jsatileinfo.c \
 smurf_jsatilelist.c \
