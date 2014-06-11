@@ -54,4 +54,26 @@
 #ifndef CCATSIM_H_DEFINED
 #define CCATSIM_H_DEFINED
 
+#include <hdf5.h>
+#include <hdf5_hl.h>
+
+/*************************
+ * dataset properties    *
+ *************************/
+
+#define CCATSIM_DSETNAME_TELRA   "telescope_ra"
+#define CCATSIM_DSETNAME_TELDEC  "telescope_dec"
+#define CCATSIM_DSETNAME_DETRA   "detector_ra"
+#define CCATSIM_DSETNAME_DETDEC  "detector_dec"
+#define CCATSIM_DSETNAME_DETDATA "timestream_data"
+
+/*************************
+ * access functions      *
+ *************************/
+
+/* all functions return non-zero in on error */
+int ccatsim_openfile(const char *filename, hid_t *file_id);
+int ccatsim_getdims(hid_t file_id, int *ndet, int *nsamp);
+
+
 #endif /* CCATSIM_H_DEFINED */

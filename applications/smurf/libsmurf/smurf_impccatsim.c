@@ -26,6 +26,7 @@
 *     may subsequently be read by other SMURF routines to make maps.
 
 *  Notes:
+*     - adapted from smurf_impaztec.c and smurf_nanten2ascis.c
 
 *  ADAM Parameters:
 *     IN = _CHAR (Read)
@@ -111,26 +112,106 @@
 #include "libsc2sim/sc2sim_struct.h"
 #include "libsc2sim/sc2sim.h"
 
-#include "libccatsim/ccatsim.h"
-
 /* netCDF includes */
 #if HAVE_LIBHDF5_HL
-#include "hdf5.h"
-#include "hdf5_hl.h"
+#include "libccatsim/ccatsim.h"
 #endif
 
 #define FUNC_NAME "smurf_impccatsim"
 #define TASK_NAME "IMPCCATSIM"
 
+#define MAXSTRING 256
+
+/*
+  prototypes for local hdf5 function wrappers
+*/
+
+#if HAVE_LIBHDF5_HL
+/* hdf5 error handling */
+static void hdf5_error(const char *msg, int *status);
+#endif
+
 void smurf_impccatsim( int *status ) {
 
 #if HAVE_LIBHDF5_HL
 
+  char infile[MAXSTRING];      /* input HDF5 file name */
+  hid_t infile_id;             /* id of input HDF5 file */
+  int infile_isopen;           /* flag stating whether infile is open */
+  herr_t h5err;                /* HDF5 error return value */
+  char h5msg[MAXSTRING];       /* HDF5 message string */
+  char ndffile[MAXSTRING];     /* output NDF file name */
+  int ndet;                    /* number of detectors */
+  int nsamp;                   /* number of time samples */
 
+  /* set defaults */
+  infile_isopen = 0;
+
+  /* Get the user defined input and output file names */
+  parGet0c( "IN", infile, MAXSTRING, status);
+  parGet0c( "OUT", ndffile, MAXSTRING, status);
+
+  /* Open the HDF5 file and check for errors */
+  if( *status == SAI__OK ) {
+
+    msgOutiff(MSG__NORM," ",
+              "Opening CCAT simulator file %s", status, infile);
+
+    *status = ccatsim_openfile(infile, &infile_id);
+    if (*status != SAI__OK) {
+      hdf5_error("could not read file", status);
+      goto CLEANUP;
+    }
+
+    infile_isopen = 1;
+  }
+
+  /* handle data */
+  if( *status == SAI__OK ) {
+
+    /* get number of detectors and samples */
+    *status = ccatsim_getdims(infile_id, &ndet, &nsamp);
+    if (*status != SAI__OK) {
+      hdf5_error("could not get dimensions of dataset", status);
+      goto CLEANUP;
+    }
+
+    msgOutiff(MSG__NORM, "", "Dataset has %d detectors, %d time samples.\n",
+             status, ndet, nsamp);
+  }
+
+  msgOutif(MSG__VERB," ",
+           "Writing NDF file", status);
+
+  ndfBegin();
+
+  /* Create HDS container file */
+  //ndfPlace ( NULL, ndffile, &place, status );
+
+  /* Close the NDF */
+
+  sc2store_headunmap( status );
+
+  //ndfAnnul ( &indf, status );
+
+  ndfEnd ( status );
+
+ CLEANUP:
+  /* Free memory etc */
+
+  /* close input file */
+  if( infile_isopen ) {
+    h5err = H5Fclose(infile_id);
+    if (h5err < 0) {
+      hdf5_error("could not close file", status);
+    }
+    infile_isopen = 0;
+  }
+
+  /* all done */
   if ( *status == SAI__OK ) {
     msgOutif(MSG__VERB," ",
              "impccatsim complete, NDF file written", status);
-
   }
 
 #else
@@ -142,3 +223,17 @@ void smurf_impccatsim( int *status ) {
 #endif
 
 }
+
+#ifdef HAVE_LIBHDF5_HL
+
+/* hand hdf5 error */
+static void hdf5_error(const char *msg, int *status)
+{
+  msgSetc("ERROR", msg);
+  *status = SAI__ERROR;
+  errRep(FUNC_NAME, "HDF5 reported: ^ERROR", status);
+
+  return;
+}
+
+#endif
