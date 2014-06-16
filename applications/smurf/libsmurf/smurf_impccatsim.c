@@ -49,6 +49,8 @@
 *  History:
 *     2014-06-09 (AGM):
 *        Initial Version
+*     2014-06-16 (AGM):
+*        Update for ccatsim_data structure
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -122,24 +124,13 @@
 
 #define MAXSTRING 256
 
-/*
-  prototypes for local hdf5 function wrappers
-*/
-
-#if HAVE_LIBHDF5_HL
-/* hdf5 error handling */
-static void hdf5_error(const char *msg, int *status);
-#endif
-
 void smurf_impccatsim( int *status ) {
 
 #if HAVE_LIBHDF5_HL
 
   char infile[MAXSTRING];      /* input HDF5 file name */
-  hid_t infile_id;             /* id of input HDF5 file */
+  ccatsim_data *ccatdata;      /* structure containing info about input data file */
   int infile_isopen;           /* flag stating whether infile is open */
-  herr_t h5err;                /* HDF5 error return value */
-  char h5msg[MAXSTRING];       /* HDF5 message string */
   char ndffile[MAXSTRING];     /* output NDF file name */
   int ndet;                    /* number of detectors */
   int nsamp;                   /* number of time samples */
@@ -154,30 +145,23 @@ void smurf_impccatsim( int *status ) {
   /* Open the HDF5 file and check for errors */
   if( *status == SAI__OK ) {
 
+    /* allocate memory */
+    ccatdata = astMalloc(sizeof(*ccatdata));
+
     msgOutiff(MSG__NORM," ",
               "Opening CCAT simulator file %s", status, infile);
 
-    *status = ccatsim_openfile(infile, &infile_id);
-    if (*status != SAI__OK) {
-      hdf5_error("could not read file", status);
-      goto CLEANUP;
-    }
-
+    ccatsim_openfile(infile, ccatdata, status);
     infile_isopen = 1;
+
+    msgOutiff(MSG__VERB, "", "data file has %d detectors and %d time samples",
+              status, ccatdata->ndet, ccatdata->nsamp);
   }
 
   /* handle data */
   if( *status == SAI__OK ) {
 
-    /* get number of detectors and samples */
-    *status = ccatsim_getdims(infile_id, &ndet, &nsamp);
-    if (*status != SAI__OK) {
-      hdf5_error("could not get dimensions of dataset", status);
-      goto CLEANUP;
-    }
 
-    msgOutiff(MSG__NORM, "", "Dataset has %d detectors, %d time samples.\n",
-             status, ndet, nsamp);
   }
 
   msgOutif(MSG__VERB," ",
@@ -201,11 +185,9 @@ void smurf_impccatsim( int *status ) {
 
   /* close input file */
   if( infile_isopen ) {
-    h5err = H5Fclose(infile_id);
-    if (h5err < 0) {
-      hdf5_error("could not close file", status);
-    }
+    ccatsim_closefile(ccatdata, status);
     infile_isopen = 0;
+    astFree(ccatdata);
   }
 
   /* all done */
@@ -224,16 +206,3 @@ void smurf_impccatsim( int *status ) {
 
 }
 
-#ifdef HAVE_LIBHDF5_HL
-
-/* hand hdf5 error */
-static void hdf5_error(const char *msg, int *status)
-{
-  msgSetc("ERROR", msg);
-  *status = SAI__ERROR;
-  errRep(FUNC_NAME, "HDF5 reported: ^ERROR", status);
-
-  return;
-}
-
-#endif

@@ -1,38 +1,32 @@
 /*
 *+
 *  Name:
-*     ccatsim_getdims
+*     ccatsim_closefile
 
 *  Purpose:
-*     Get number of detectors and number of time samples from file
+*     Close HDF5 file and free data structure (if necessary)
 
 *  Language:
 *     Starlink ANSI C
 
 *  Invocation:
-*     int error = ccatsim_getdims(hid_t file_id, int *ndet, int *nsamp);
+*     ccatsim_closefile(ccatsim_data *data, int *status);
 
 *  Arguments:
-*     file_id = hid_t (Given)
-*        file object of opened file
-*     ndet = int * (Returned)
-*        number of detectors in dataset
-*     nsamp = int * (Returned)
-*        number of time samples in dataset
-
-*  Returned:
-*     error (int)
-*        Non-zero on error.
+*     data = ccatsim_data * (Given/Returned)
+*        data structure containing file info
+*     status = int* (Given and Returned)
+*        Pointer to global status.
 
 *  Description:
-*     Get dimensions HDF5 CCATsimulation file.
+*     Close HDF5 file
 
 *  Authors:
 *     AGM: Gaelen Marsden (UBC)
 *     {enter_new_authors_here}
 
 *  History:
-*     2014-06-11 (AGM):
+*     2014-06-16 (AGM):
 *        Initial Version
 *     {enter_further_changes_here}
 
@@ -67,25 +61,19 @@
 
 #include "ccatsim.h"
 
-#define FUNC_NAME "ccatsim_getdims"
+#define FUNC_NAME "ccatsim_closefile"
 
 #define EXTENSION "CCATSIM"
 
-int ccatsim_getdims(hid_t file_id, int *ndet, int *nsamp)
+void ccatsim_closefile(ccatsim_data *data, int *status)
 {
-  herr_t h5err;
-  hsize_t dims[2];  /* dimension array */
+  herr_t h5err;           /* hdf5 error code */
+  char message[CCATSIM_MESSAGE_LEN]; /* error message */
 
-  /* use DATASET_NAME_DET_DATA to get dimensions */
-  h5err = H5LTget_dataset_info(file_id, CCATSIM_DSETNAME_DETDATA, dims,
-                               NULL, NULL);
+  h5err = H5Fclose(data->file_id);
+  if (h5err < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN, "%s", "could not close file");
+    ccatsim_error(message, status);
+  }
 
-  if (h5err < 0) return h5err;
-
-  /* set output values */
-  *nsamp = dims[0];
-  *ndet = dims[1];
-
-  /* all good */
-  return 0;
 }

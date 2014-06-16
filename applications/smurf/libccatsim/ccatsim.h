@@ -25,6 +25,8 @@
 *  History:
 *     2014-06-09 (AGM):
 *        Initial version
+*     2014-06-16 (AGM):
+*        Introduce ccatsim_data structure, fill using ccatsim_openfile()
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -54,6 +56,11 @@
 #ifndef CCATSIM_H_DEFINED
 #define CCATSIM_H_DEFINED
 
+/* starlink includes */
+#include "ast.h"
+#include "mers.h"
+#include "sae_par.h"
+
 #include <hdf5.h>
 #include <hdf5_hl.h>
 
@@ -67,13 +74,25 @@
 #define CCATSIM_DSETNAME_DETDEC  "detector_dec"
 #define CCATSIM_DSETNAME_DETDATA "timestream_data"
 
-/*************************
- * access functions      *
- *************************/
+#define CCATSIM_MESSAGE_LEN 256
 
-/* all functions return non-zero in on error */
-int ccatsim_openfile(const char *filename, hid_t *file_id);
-int ccatsim_getdims(hid_t file_id, int *ndet, int *nsamp);
+/* data structure */
+typedef struct ccatsim_data {
+  const char *filename; /* keep pointer to data filename */
+  hid_t file_id;        /* hdf5 file pointer */
+  int ndet;             /* number of detectors */
+  int nsamp;            /* number of time samples */
+} ccatsim_data;
+
+/* hand hdf5 error */
+void ccatsim_error(const char *msg, int *status);
+
+/* open file and fill data structure */
+void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status);
+
+/* close file pointer (and free mem if necessary) */
+void ccatsim_closefile(ccatsim_data *data, int *status);
+
 
 
 #endif /* CCATSIM_H_DEFINED */

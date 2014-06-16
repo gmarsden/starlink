@@ -4,23 +4,21 @@
 *     ccatsim_openfile
 
 *  Purpose:
-*     Open HDF5 for reading
+*     Open HDF5 for reading and fill data structure
 
 *  Language:
 *     Starlink ANSI C
 
 *  Invocation:
-*     int error = ccatsim_openfile(const char *filename, hid_t *file_id);
+*     ccatsim_openfile(const char *filename, ccatsim_data *data, int *status);
 
 *  Arguments:
 *     filename = const char * (Given)
 *        filename of HDF5 file to open
-*     file_id = hid_t * (Returned)
-*        pointer to file object of opened file
-
-*  Returned:
-*     error (int)
-*        Non-zero on error.
+*     data = ccatsim_data * (Returned)
+*        data structure containing file info
+*     status = int* (Given and Returned)
+*        Pointer to global status.
 
 *  Description:
 *     Open an HDF5 for reading.
@@ -32,6 +30,8 @@
 *  History:
 *     2014-06-11 (AGM):
 *        Initial Version
+*     2014-06-16 (AGM):
+*        Introduce ccatsim_data structure
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -69,18 +69,45 @@
 
 #define EXTENSION "CCATSIM"
 
-int ccatsim_openfile(const char *filename, hid_t *file_id)
+void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
 {
-  herr_t h5err;
+  herr_t h5err;           /* hdf5 error code */
+  hid_t file_id;          /* hdf5 file pointer */
+  char message[CCATSIM_MESSAGE_LEN]; /* error message */
+  hsize_t dims[2];        /* data dimensions */
+
+  /* set filename */
+  data->filename = filename;
 
   /* Turn off automatic HDF5 error reporting */
   h5err = H5Eset_auto2(H5E_DEFAULT, NULL, NULL);
-  if (h5err < 0) return h5err;
+  if (h5err < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN, "%s",
+             "could not turn off HDF5 error reporting");
+    ccatsim_error(message, status);
+    return;
+  }
 
   /* open file */
-  *file_id = H5Fopen(filename, H5F_ACC_RDONLY, H5P_DEFAULT);
-  if (*file_id < 0) return *file_id;
+  file_id = H5Fopen(filename, H5F_ACC_RDONLY, H5P_DEFAULT);
+  if (file_id < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN, "%s", "could not open HDF5 file");
+    ccatsim_error(message, status);
+    return;
+  }
+  data->file_id = file_id;
 
-  /* all good */
-  return 0;
+  /* get dimensions using DATASET_NAME_DET_DATA */
+  h5err = H5LTget_dataset_info(file_id, CCATSIM_DSETNAME_DETDATA, dims,
+                               NULL, NULL);
+  if (h5err < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN, "%s",
+             "could not retrieve data dimensions");
+    ccatsim_error(message, status);
+    return;
+  }
+  data->nsamp = dims[0];
+  data->ndet = dims[1];
+
+  /* success */
 }
