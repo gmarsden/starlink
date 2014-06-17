@@ -74,11 +74,28 @@
  * dataset properties    *
  *************************/
 
-#define CCATSIM_DSETNAME_TELRA   "telescope_ra"
-#define CCATSIM_DSETNAME_TELDEC  "telescope_dec"
-#define CCATSIM_DSETNAME_DETRA   "detector_ra"
-#define CCATSIM_DSETNAME_DETDEC  "detector_dec"
-#define CCATSIM_DSETNAME_DETDATA "timestream_data"
+#define CCATSIM_TELRA_NAME   "telescope_ra"
+#define CCATSIM_TELRA_RANK   1
+#define CCATSIM_TELRA_UNIT   "degrees"
+
+#define CCATSIM_TELDEC_NAME  "telescope_dec"
+#define CCATSIM_TELDEC_RANK  1
+#define CCATSIM_TELDEC_UNIT  "degrees"
+
+#define CCATSIM_DETRA_NAME   "detector_ra"
+#define CCATSIM_DETRA_RANK   1
+#define CCATSIM_DETRA_UNIT   "degrees"
+
+#define CCATSIM_DETDEC_NAME  "detector_dec"
+#define CCATSIM_DETDEC_RANK  1
+#define CCATSIM_DETDEC_UNIT  "degrees"
+
+#define CCATSIM_DETDATA_NAME "timestream_data"
+#define CCATSIM_DETDATA_RANK 2
+#define CCATSIM_DETDATA_UNIT "Jy"
+
+/* name of units attribute */
+#define CCATSIM_UNITS_NAME   "Units"
 
 #define CCATSIM_MESSAGE_LEN 256
 
@@ -91,8 +108,10 @@ typedef struct ccatsim_data {
   int nsamp;            /* number of time samples */
 } ccatsim_data;
 
-/* hand hdf5 error */
-void ccatsim_error(const char *msg, int *status);
+
+/***************************
+ * public access functions *
+ ***************************/
 
 /* open file and fill data structure */
 void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status);
@@ -100,6 +119,22 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status);
 /* close file pointer (and free mem if necessary) */
 void ccatsim_closefile(ccatsim_data *data, int *status);
 
+/* read detector focal plane positions into smfhead */
+void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status);
+
+/* free memory in smfHead initialized by fill_smfHead */
+void ccatsim_free_smfHead(smfHead *hdr, int *status);
+
+/****************************
+ * private access functions *
+ ****************************/
+
+/* handle hdf5 error */
+void ccatsim_error(const char *msg, int *status);
+
+/* check dataset properties */
+void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
+                        const hsize_t *dims, const char *units, int *status);
 
 
 #endif /* CCATSIM_H_DEFINED */

@@ -134,8 +134,11 @@ void smurf_impccatsim( int *status ) {
   int ndet;                    /* number of detectors */
   int nsamp;                   /* number of time samples */
 
+  smfHead hdr;
+
   /* set defaults */
   memset(&ccatdata, 0, sizeof(ccatdata));
+  memset(&hdr, 0, sizeof(hdr));
 
   /* Get the user defined input and output file names */
   parGet0c( "IN", infile, MAXSTRING, status);
@@ -157,6 +160,9 @@ void smurf_impccatsim( int *status ) {
   /* handle data */
   if( *status == SAI__OK ) {
 
+
+   /* Populate bolo LUT */
+    ccatsim_fill_smfHead(&ccatdata, &hdr, status);
 
   }
 

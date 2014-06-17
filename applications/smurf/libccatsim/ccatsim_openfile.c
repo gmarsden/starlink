@@ -98,7 +98,7 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   data->file_id = file_id;
 
   /* get dimensions using DATASET_NAME_DET_DATA */
-  h5err = H5LTget_dataset_info(file_id, CCATSIM_DSETNAME_DETDATA, dims,
+  h5err = H5LTget_dataset_info(file_id, CCATSIM_DETDATA_NAME, dims,
                                NULL, NULL);
   if (h5err < 0) {
     snprintf(message, CCATSIM_MESSAGE_LEN, "%s",
