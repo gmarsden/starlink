@@ -148,12 +148,14 @@ void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
     }
 
     /* check units */
-    if (strncmp(thisunits, units, CCATSIM_MESSAGE_LEN) != 0) {
-      snprintf(message, CCATSIM_MESSAGE_LEN,
-               "dataset '%s' has wrong units (expected %s, got %s)",
-               CCATSIM_DETRA_NAME, units, thisunits);
-      ccatsim_error(message, status);
-      return;
+    if (units != NULL) {
+      if (strncmp(thisunits, units, CCATSIM_MESSAGE_LEN) != 0) {
+        snprintf(message, CCATSIM_MESSAGE_LEN,
+                 "dataset '%s' has wrong units (expected %s, got %s)",
+                 CCATSIM_DETRA_NAME, units, thisunits);
+        ccatsim_error(message, status);
+        return;
+      }
     }
 
   }
