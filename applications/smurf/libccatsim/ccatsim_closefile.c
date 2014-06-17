@@ -67,11 +67,11 @@
 
 void ccatsim_closefile(ccatsim_data *data, int *status)
 {
-  herr_t h5err;           /* hdf5 error code */
+  herr_t h5error;         /* hdf5 error code */
   char message[CCATSIM_MESSAGE_LEN]; /* error message */
 
-  h5err = H5Fclose(data->file_id);
-  if (h5err < 0) {
+  h5error = H5Fclose(data->file_id);
+  if (h5error < 0) {
     snprintf(message, CCATSIM_MESSAGE_LEN, "%s", "could not close file");
     ccatsim_error(message, status);
   }

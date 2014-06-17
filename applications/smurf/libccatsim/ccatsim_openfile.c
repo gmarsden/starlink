@@ -71,7 +71,7 @@
 
 void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
 {
-  herr_t h5err;           /* hdf5 error code */
+  herr_t h5error;         /* hdf5 error code */
   hid_t file_id;          /* hdf5 file pointer */
   char message[CCATSIM_MESSAGE_LEN]; /* error message */
   hsize_t dims[2];        /* data dimensions */
@@ -80,8 +80,8 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   data->filename = filename;
 
   /* Turn off automatic HDF5 error reporting */
-  h5err = H5Eset_auto2(H5E_DEFAULT, NULL, NULL);
-  if (h5err < 0) {
+  h5error = H5Eset_auto2(H5E_DEFAULT, NULL, NULL);
+  if (h5error < 0) {
     snprintf(message, CCATSIM_MESSAGE_LEN, "%s",
              "could not turn off HDF5 error reporting");
     ccatsim_error(message, status);
@@ -98,9 +98,9 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   data->file_id = file_id;
 
   /* get dimensions using DATASET_NAME_DET_DATA */
-  h5err = H5LTget_dataset_info(file_id, CCATSIM_DETDATA_NAME, dims,
+  h5error = H5LTget_dataset_info(file_id, CCATSIM_DETDATA_NAME, dims,
                                NULL, NULL);
-  if (h5err < 0) {
+  if (h5error < 0) {
     snprintf(message, CCATSIM_MESSAGE_LEN, "%s",
              "could not retrieve data dimensions");
     ccatsim_error(message, status);

@@ -76,7 +76,7 @@ void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status) {
   double * fplaney = NULL; /* Y coordinates in radians */
   unsigned int i;          /* loop counter */
 
-  herr_t h5err;            /* hdf5 error status */
+  herr_t h5error;          /* hdf5 error status */
   int ndim;                /* rank */
   hsize_t dim;             /* dimension */
   char message[CCATSIM_MESSAGE_LEN]; /* error message */
@@ -112,9 +112,9 @@ void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status) {
     fplaney = astMalloc( (hdr->ndet)*sizeof(*fplaney) );
 
     /* read DET_RA */
-    h5err = H5LTread_dataset(data->file_id, CCATSIM_DETRA_NAME,
+    h5error = H5LTread_dataset(data->file_id, CCATSIM_DETRA_NAME,
                              H5T_NATIVE_DOUBLE, fplanex);
-    if (h5err < 0) {
+    if (h5error < 0) {
       snprintf(message, CCATSIM_MESSAGE_LEN,
                "could not read dataset '%s'", CCATSIM_DETRA_NAME);
       ccatsim_error(message, status);
@@ -122,9 +122,9 @@ void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status) {
     }
 
     /* read DET_DEC */
-    h5err = H5LTread_dataset(data->file_id, CCATSIM_DETDEC_NAME,
+    h5error = H5LTread_dataset(data->file_id, CCATSIM_DETDEC_NAME,
                              H5T_NATIVE_DOUBLE, fplaney);
-    if (h5err < 0) {
+    if (h5error < 0) {
       snprintf(message, CCATSIM_MESSAGE_LEN,
                "could not read dataset '%s'", CCATSIM_DETDEC_NAME);
       ccatsim_error(message, status);
