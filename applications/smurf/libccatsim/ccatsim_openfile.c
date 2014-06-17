@@ -110,4 +110,5 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   data->ndet = dims[1];
 
   /* success */
+  data->isopen = 1;
 }

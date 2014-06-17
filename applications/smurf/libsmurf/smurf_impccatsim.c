@@ -129,14 +129,13 @@ void smurf_impccatsim( int *status ) {
 #if HAVE_LIBHDF5_HL
 
   char infile[MAXSTRING];      /* input HDF5 file name */
-  ccatsim_data *ccatdata;      /* structure containing info about input data file */
-  int infile_isopen;           /* flag stating whether infile is open */
+  ccatsim_data ccatdata;       /* structure containing info about input data file */
   char ndffile[MAXSTRING];     /* output NDF file name */
   int ndet;                    /* number of detectors */
   int nsamp;                   /* number of time samples */
 
   /* set defaults */
-  infile_isopen = 0;
+  memset(&ccatdata, 0, sizeof(ccatdata));
 
   /* Get the user defined input and output file names */
   parGet0c( "IN", infile, MAXSTRING, status);
@@ -145,17 +144,14 @@ void smurf_impccatsim( int *status ) {
   /* Open the HDF5 file and check for errors */
   if( *status == SAI__OK ) {
 
-    /* allocate memory */
-    ccatdata = astMalloc(sizeof(*ccatdata));
-
     msgOutiff(MSG__NORM," ",
               "Opening CCAT simulator file %s", status, infile);
 
-    ccatsim_openfile(infile, ccatdata, status);
-    infile_isopen = 1;
+    ccatsim_openfile(infile, &ccatdata, status);
+    if (*status != SAI__OK) goto CLEANUP;
 
     msgOutiff(MSG__VERB, "", "data file has %d detectors and %d time samples",
-              status, ccatdata->ndet, ccatdata->nsamp);
+              status, ccatdata.ndet, ccatdata.nsamp);
   }
 
   /* handle data */
@@ -182,12 +178,12 @@ void smurf_impccatsim( int *status ) {
 
  CLEANUP:
   /* Free memory etc */
+  ccatsim_free_smfHead(&hdr, status);
+
 
   /* close input file */
-  if( infile_isopen ) {
-    ccatsim_closefile(ccatdata, status);
-    infile_isopen = 0;
-    astFree(ccatdata);
+  if(ccatdata.isopen) {
+    ccatsim_closefile(&ccatdata, status);
   }
 
   /* all done */

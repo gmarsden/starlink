@@ -4,7 +4,7 @@
 *     ccatsim_closefile
 
 *  Purpose:
-*     Close HDF5 file and free data structure (if necessary)
+*     Close HDF5 file and free data (if necessary)
 
 *  Language:
 *     Starlink ANSI C
@@ -76,4 +76,5 @@ void ccatsim_closefile(ccatsim_data *data, int *status)
     ccatsim_error(message, status);
   }
 
+  data->isopen = 0;
 }

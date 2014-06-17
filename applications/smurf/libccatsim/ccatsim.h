@@ -56,10 +56,16 @@
 #ifndef CCATSIM_H_DEFINED
 #define CCATSIM_H_DEFINED
 
+#include <string.h>
+
 /* starlink includes */
 #include "ast.h"
 #include "mers.h"
 #include "sae_par.h"
+#include "star/hds.h"
+#include "ndf.h"
+#include "libsmf/smf.h"
+#include "smurf_par.h"
 
 #include <hdf5.h>
 #include <hdf5_hl.h>
@@ -78,6 +84,7 @@
 
 /* data structure */
 typedef struct ccatsim_data {
+  int isopen;           /* flag stating if file is open */
   const char *filename; /* keep pointer to data filename */
   hid_t file_id;        /* hdf5 file pointer */
   int ndet;             /* number of detectors */
