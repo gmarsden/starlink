@@ -130,11 +130,20 @@ void smurf_impccatsim( int *status ) {
 
   char infile[MAXSTRING];      /* input HDF5 file name */
   ccatsim_data ccatdata;       /* structure containing info about input data file */
-  char ndffile[MAXSTRING];     /* output NDF file name */
-  int ndet;                    /* number of detectors */
-  int nsamp;                   /* number of time samples */
 
   smfHead hdr;
+
+  char ndffile[MAXSTRING];     /* output NDF file name */
+  int place=0;                 /* NDF placeholder */
+  int indf=0;                  /* NDF id for the file */
+  void *pntr=NULL;             /* Temporary pointer */
+  int nmap=0;                  /* Number of elements mapped */
+
+  int lbnd[3];                 /* Dimensions of the DATA component */
+  int ubnd[3];                 /* Dimensions of the DATA component */
+  int ncol;                    /* number of bolometers in column  */
+  int nrow=1;                  /* number of bolometers in row */
+  double *full_bolosig=NULL;   /* all bolo signals [ndet x nsamp] */
 
   /* set defaults */
   memset(&ccatdata, 0, sizeof(ccatdata));
@@ -153,6 +162,8 @@ void smurf_impccatsim( int *status ) {
     ccatsim_openfile(infile, &ccatdata, status);
     if (*status != SAI__OK) goto CLEANUP;
 
+    ncol = ccatdata.ndet;
+
     msgOutiff(MSG__VERB, "", "data file has %d detectors and %d time samples",
               status, ccatdata.ndet, ccatdata.nsamp);
   }
@@ -160,25 +171,41 @@ void smurf_impccatsim( int *status ) {
   /* handle data */
   if( *status == SAI__OK ) {
 
-
    /* Populate bolo LUT */
     ccatsim_fill_smfHead(&ccatdata, &hdr, status);
 
   }
 
-  msgOutif(MSG__VERB," ",
-           "Writing NDF file", status);
+  msgOutif(MSG__VERB," ", "Writing NDF file", status);
 
   ndfBegin();
 
   /* Create HDS container file */
-  //ndfPlace ( NULL, ndffile, &place, status );
+  ndfPlace ( NULL, ndffile, &place, status );
+
+  /* Create an NDF inside the container */
+  lbnd[SC2STORE__COL_INDEX] = SC2STORE__BOL_LBND;
+  ubnd[SC2STORE__COL_INDEX] = lbnd[SC2STORE__COL_INDEX] + ncol - 1;
+  lbnd[SC2STORE__ROW_INDEX] = SC2STORE__BOL_LBND;
+  ubnd[SC2STORE__ROW_INDEX] = lbnd[SC2STORE__ROW_INDEX] + nrow - 1;
+  ubnd[2] = ccatdata.nsamp;
+  lbnd[2] = 1;
+
+  ndfNew ( "_DOUBLE", 3, lbnd, ubnd, &place, &indf, status );
+  ndfHcre ( indf, status );
+
+  /* Map the data array */
+  ndfMap( indf, "DATA", "_DOUBLE", "WRITE", &pntr, &nmap, status );
+
+  full_bolosig = pntr;
+
+  /* read data into full_bolosig. */
+  /* data are to be stored with detector index varying most quickly. */
+  ccatsim_getdata(&ccatdata, full_bolosig, status);
 
   /* Close the NDF */
 
-  sc2store_headunmap( status );
-
-  //ndfAnnul ( &indf, status );
+  ndfAnnul ( &indf, status );
 
   ndfEnd ( status );
 

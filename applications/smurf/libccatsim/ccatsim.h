@@ -125,6 +125,10 @@ void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status);
 /* free memory in smfHead initialized by fill_smfHead */
 void ccatsim_free_smfHead(smfHead *hdr, int *status);
 
+/* read detector data into array */
+void ccatsim_getdata(ccatsim_data *data, double *dataptr, int *status);
+
+
 /****************************
  * private access functions *
  ****************************/
