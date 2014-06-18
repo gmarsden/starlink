@@ -144,6 +144,7 @@ void smurf_impccatsim( int *status ) {
   int ncol;                    /* number of bolometers in column  */
   int nrow=1;                  /* number of bolometers in row */
   double *full_bolosig=NULL;   /* all bolo signals [ndet x nsamp] */
+  AstFitsChan *fitschan=NULL;  /* FITS headers */
 
   /* set defaults */
   memset(&ccatdata, 0, sizeof(ccatdata));
@@ -203,6 +204,12 @@ void smurf_impccatsim( int *status ) {
   /* data are to be stored with detector index varying most quickly. */
   ccatsim_getdata(&ccatdata, full_bolosig, status);
 
+  /* fits headers */
+  fitschan = astFitsChan(NULL, NULL, " ");
+  ccatsim_setfitshead(&ccatdata, fitschan, status);
+  kpgPtfts(indf, fitschan, status); /* add as extension to ndf */
+
+
   /* Close the NDF */
 
   ndfAnnul ( &indf, status );
@@ -212,6 +219,7 @@ void smurf_impccatsim( int *status ) {
  CLEANUP:
   /* Free memory etc */
   ccatsim_free_smfHead(&hdr, status);
+  if (fitschan) fitschan = astAnnul( fitschan );
 
 
   /* close input file */

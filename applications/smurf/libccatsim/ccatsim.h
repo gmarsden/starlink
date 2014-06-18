@@ -128,6 +128,10 @@ void ccatsim_free_smfHead(smfHead *hdr, int *status);
 /* read detector data into array */
 void ccatsim_getdata(ccatsim_data *data, double *dataptr, int *status);
 
+/* set fits headers */
+void ccatsim_setfitshead(ccatsim_data *data, AstFitsChan *fitschan,
+                         int *status);
+
 
 /****************************
  * private access functions *

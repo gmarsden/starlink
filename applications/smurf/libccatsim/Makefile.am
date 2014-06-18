@@ -10,7 +10,8 @@ C_ROUTINES = \
 	ccatsim_fill_smfHead.c \
 	ccatsim_free_smfHead.c \
 	ccatsim_getdata.c \
-	ccatsim_openfile.c
+	ccatsim_openfile.c \
+	ccatsim_setfitshead.c
 
 noinst_INCLUDES = ccatsim.h
 
