@@ -97,6 +97,9 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   }
   data->file_id = file_id;
 
+  /* mark file opened */
+  data->isopen = 1;
+
   /* get dimensions using DATASET_NAME_DET_DATA */
   h5error = H5LTget_dataset_info(file_id, CCATSIM_DETDATA_NAME, dims,
                                NULL, NULL);
@@ -110,5 +113,4 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   data->ndet = dims[1];
 
   /* success */
-  data->isopen = 1;
 }
