@@ -82,11 +82,11 @@
 #define CCATSIM_TELDEC_RANK  1
 #define CCATSIM_TELDEC_UNIT  "degrees"
 
-#define CCATSIM_DETRA_NAME   "detector_ra"
+#define CCATSIM_DETRA_NAME   "detector_x"
 #define CCATSIM_DETRA_RANK   1
 #define CCATSIM_DETRA_UNIT   "degrees"
 
-#define CCATSIM_DETDEC_NAME  "detector_dec"
+#define CCATSIM_DETDEC_NAME  "detector_y"
 #define CCATSIM_DETDEC_RANK  1
 #define CCATSIM_DETDEC_UNIT  "degrees"
 
