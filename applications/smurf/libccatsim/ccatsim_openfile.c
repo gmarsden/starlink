@@ -75,6 +75,7 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   hid_t file_id;          /* hdf5 file pointer */
   char message[CCATSIM_MESSAGE_LEN]; /* error message */
   hsize_t dims[2];        /* data dimensions */
+  int track_source;       /* retrieve track_source value from file */
 
   /* set filename */
   data->filename = filename;
@@ -99,6 +100,21 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
 
   /* mark file opened */
   data->isopen = 1;
+
+  /* check that simulation tracks source -- don't know how to deal with it
+     otherwise */
+  h5error = H5LTread_dataset_int(file_id, CCATSIM_TRACKSOURCE_NAME, &track_source);
+  if (h5error < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN, "could not read dataset '%s'",
+             CCATSIM_TRACKSOURCE_NAME);
+    ccatsim_error(message, status);
+    return;
+  }
+  if (!track_source) {
+    ccatsim_error("Simulation does not track source. Exiting.", status);
+    return;
+  }
+
 
   /* get dimensions using DATASET_NAME_DET_DATA */
   h5error = H5LTget_dataset_info(file_id, CCATSIM_DETDATA_NAME, dims,

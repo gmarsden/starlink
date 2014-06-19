@@ -94,6 +94,8 @@
 #define CCATSIM_DETDATA_RANK 2
 #define CCATSIM_DETDATA_UNIT "Jy"
 
+#define CCATSIM_TRACKSOURCE_NAME "track_source"
+
 /* name of units attribute */
 #define CCATSIM_UNITS_NAME   "Units"
 
