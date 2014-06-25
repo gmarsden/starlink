@@ -34,6 +34,7 @@
 *        Introduce ccatsim_data structure
 *     2014-06-25 (AGM):
 *        Read telpos into data structure
+*        Read source ra/dec into data structure
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -181,6 +182,42 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
     return;
   }
 
+  /*****************************
+   * get source position       *
+   *****************************/
+
+  /* all fields have single element */
+  dims[0] = 1;
+
+  /* check source ra */
+  ccatsim_check_dset(data, CCATSIM_SRCRA_NAME, CCATSIM_SRCRA_RANK,
+                     dims, CCATSIM_SRCRA_UNIT, status);
+  if (*status != SAI__OK) return;
+
+  /* get source ra */
+  h5error = H5LTread_dataset(data->file_id, CCATSIM_SRCRA_NAME,
+                             H5T_NATIVE_DOUBLE, &(data->srcpos[0]));
+  if (h5error < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN,
+             "could not read dataset '%s'", CCATSIM_SRCRA_NAME);
+    ccatsim_error(message, status);
+    return;
+  }
+
+  /* check source dec */
+  ccatsim_check_dset(data, CCATSIM_SRCDEC_NAME, CCATSIM_SRCDEC_RANK,
+                     dims, CCATSIM_SRCDEC_UNIT, status);
+  if (*status != SAI__OK) return;
+
+  /* get source dec */
+  h5error = H5LTread_dataset(data->file_id, CCATSIM_SRCDEC_NAME,
+                             H5T_NATIVE_DOUBLE, &(data->srcpos[1]));
+  if (h5error < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN,
+             "could not read dataset '%s'", CCATSIM_SRCDEC_NAME);
+    ccatsim_error(message, status);
+    return;
+  }
 
   /* success */
 }

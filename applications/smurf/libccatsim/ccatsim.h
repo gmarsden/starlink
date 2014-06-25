@@ -29,6 +29,7 @@
 *        Introduce ccatsim_data structure, fill using ccatsim_openfile()
 *     2014-06-25 (AGM):
 *        Add telpos to data structure
+*        Add srcpos to data structure
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -110,6 +111,14 @@
 #define CCATSIM_TELALT_RANK  1
 #define CCATSIM_TELALT_UNIT  "meters"
 
+#define CCATSIM_SRCRA_NAME   "source_ra"
+#define CCATSIM_SRCRA_RANK   1
+#define CCATSIM_SRCRA_UNIT   "degrees"
+
+#define CCATSIM_SRCDEC_NAME   "source_dec"
+#define CCATSIM_SRCDEC_RANK   1
+#define CCATSIM_SRCDEC_UNIT   "degrees"
+
 /* name of units attribute */
 #define CCATSIM_UNITS_NAME   "Units"
 
@@ -124,6 +133,7 @@ typedef struct ccatsim_data {
   int nsamp;            /* number of time samples */
   double telpos[3];     /* Geodetic location of the telescope
                            lon/lat/alt in deg/deg/m */
+  double srcpos[2];     /* source ra/dec in deg */
 } ccatsim_data;
 
 

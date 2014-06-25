@@ -165,15 +165,20 @@ void smurf_impccatsim( int *status ) {
 
     ncol = ccatdata.ndet;
 
-    msgOutiff(MSG__VERB, "", "data file has %d detectors and %d time samples",
+    msgOutiff(MSG__VERB, "", "Simulation tracks source at "
+              "RA = %.1lf deg, Dec = %.1lf deg\n",
+              status, ccatdata.srcpos[0], ccatdata.srcpos[1]);
+
+    msgOutiff(MSG__VERB, "", "Data file has %d detectors and %d time samples",
               status, ccatdata.ndet, ccatdata.nsamp);
   }
 
   /* handle data */
   if( *status == SAI__OK ) {
 
-   /* Populate bolo LUT */
+    /* Populate bolo LUT */
     ccatsim_fill_smfHead(&ccatdata, &hdr, status);
+    if (*status != SAI__OK) goto CLEANUP;
 
   }
 
