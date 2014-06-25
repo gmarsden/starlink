@@ -105,7 +105,7 @@ void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
   if (thisrank != rank) {
     snprintf(message, CCATSIM_MESSAGE_LEN,
              "dataset '%s' has bad rank (expected %d, got %d)",
-             CCATSIM_DETRA_NAME, rank, thisrank);
+             dsetname, rank, thisrank);
     ccatsim_error(message, status);
     return;
   }
@@ -128,7 +128,7 @@ void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
     if (thisdims[i] != dims[i]) {
       snprintf(message, CCATSIM_MESSAGE_LEN,
                "dataset '%s' has bad dimesion %d (expected %d, got %d)",
-               CCATSIM_DETRA_NAME, rank, (int)(dims[i]), (int)(thisdims[i]));
+               dsetname, rank, (int)(dims[i]), (int)(thisdims[i]));
       ccatsim_error(message, status);
       return;
     }
@@ -152,7 +152,7 @@ void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
       if (strncmp(thisunits, units, CCATSIM_MESSAGE_LEN) != 0) {
         snprintf(message, CCATSIM_MESSAGE_LEN,
                  "dataset '%s' has wrong units (expected %s, got %s)",
-                 CCATSIM_DETRA_NAME, units, thisunits);
+                 dsetname, units, thisunits);
         ccatsim_error(message, status);
         return;
       }
