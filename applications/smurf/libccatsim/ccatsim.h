@@ -27,6 +27,8 @@
 *        Initial version
 *     2014-06-16 (AGM):
 *        Introduce ccatsim_data structure, fill using ccatsim_openfile()
+*     2014-06-25 (AGM):
+*        Add telpos to data structure
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -96,6 +98,18 @@
 
 #define CCATSIM_TRACKSOURCE_NAME "track_source"
 
+#define CCATSIM_TELLON_NAME  "telescope_longitude"
+#define CCATSIM_TELLON_RANK  1
+#define CCATSIM_TELLON_UNIT  "degrees"
+
+#define CCATSIM_TELLAT_NAME  "telescope_latitude"
+#define CCATSIM_TELLAT_RANK  1
+#define CCATSIM_TELLAT_UNIT  "degrees"
+
+#define CCATSIM_TELALT_NAME  "telescope_altitude"
+#define CCATSIM_TELALT_RANK  1
+#define CCATSIM_TELALT_UNIT  "meters"
+
 /* name of units attribute */
 #define CCATSIM_UNITS_NAME   "Units"
 
@@ -108,6 +122,8 @@ typedef struct ccatsim_data {
   hid_t file_id;        /* hdf5 file pointer */
   int ndet;             /* number of detectors */
   int nsamp;            /* number of time samples */
+  double telpos[3];     /* Geodetic location of the telescope
+                           lon/lat/alt in deg/deg/m */
 } ccatsim_data;
 
 
@@ -133,7 +149,6 @@ void ccatsim_getdata(ccatsim_data *data, double *dataptr, int *status);
 /* set fits headers */
 void ccatsim_setfitshead(ccatsim_data *data, AstFitsChan *fitschan,
                          int *status);
-
 
 /****************************
  * private access functions *

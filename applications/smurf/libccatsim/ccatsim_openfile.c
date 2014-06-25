@@ -32,6 +32,8 @@
 *        Initial Version
 *     2014-06-16 (AGM):
 *        Introduce ccatsim_data structure
+*     2014-06-25 (AGM):
+*        Read telpos into data structure
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -115,7 +117,6 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
     return;
   }
 
-
   /* get dimensions using DATASET_NAME_DET_DATA */
   h5error = H5LTget_dataset_info(file_id, CCATSIM_DETDATA_NAME, dims,
                                NULL, NULL);
@@ -127,6 +128,59 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   }
   data->nsamp = dims[0];
   data->ndet = dims[1];
+
+  /*****************************
+   * get telescope position    *
+   *****************************/
+
+  /* all fields have single element */
+  dims[0] = 1;
+
+  /* check longitude */
+  ccatsim_check_dset(data, CCATSIM_TELLON_NAME, CCATSIM_TELLON_RANK,
+                     dims, CCATSIM_TELLON_UNIT, status);
+  if (*status != SAI__OK) return;
+
+  /* get longitude */
+  h5error = H5LTread_dataset(data->file_id, CCATSIM_TELLON_NAME,
+                             H5T_NATIVE_DOUBLE, &(data->telpos[0]));
+  if (h5error < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN,
+             "could not read dataset '%s'", CCATSIM_TELLON_NAME);
+    ccatsim_error(message, status);
+    return;
+  }
+
+  /* check latitude */
+  ccatsim_check_dset(data, CCATSIM_TELLAT_NAME, CCATSIM_TELLAT_RANK,
+                     dims, CCATSIM_TELLAT_UNIT, status);
+  if (*status != SAI__OK) return;
+
+  /* get latitude */
+  h5error = H5LTread_dataset(data->file_id, CCATSIM_TELLAT_NAME,
+                             H5T_NATIVE_DOUBLE, &(data->telpos[1]));
+  if (h5error < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN,
+             "could not read dataset '%s'", CCATSIM_TELLAT_NAME);
+    ccatsim_error(message, status);
+    return;
+  }
+
+  /* check altitude */
+  ccatsim_check_dset(data, CCATSIM_TELALT_NAME, CCATSIM_TELALT_RANK,
+                     dims, CCATSIM_TELALT_UNIT, status);
+  if (*status != SAI__OK) return;
+
+  /* get altitude */
+  h5error = H5LTread_dataset(data->file_id, CCATSIM_TELALT_NAME,
+                             H5T_NATIVE_DOUBLE, &(data->telpos[2]));
+  if (h5error < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN,
+             "could not read dataset '%s'", CCATSIM_TELALT_NAME);
+    ccatsim_error(message, status);
+    return;
+  }
+
 
   /* success */
 }
