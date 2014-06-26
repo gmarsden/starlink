@@ -38,6 +38,8 @@
 *  History:
 *     2014-06-16 (AGM):
 *        Initial version
+*     2014-06-26 (AGM):
+*        Clean up memory usage
 
 *  Copyright:
 *     Copyright (C) 2006 Particle Physics and Astronomy Research Council.
@@ -78,7 +80,7 @@ void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
 
   herr_t h5error;          /* hdf5 error status */
   int thisrank;            /* rank */
-  hsize_t *thisdims;       /* dimensions */
+  hsize_t *thisdims=NULL;  /* dimensions */
   char thisunits[CCATSIM_MESSAGE_LEN]; /* units */
 
   char message[CCATSIM_MESSAGE_LEN]; /* error message */
@@ -120,7 +122,7 @@ void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
     snprintf(message, CCATSIM_MESSAGE_LEN,
              "could not get dimension of dataset '%s'", dsetname);
     ccatsim_error(message, status);
-    return;
+    goto CLEANUP;
   }
 
   /* check dims */
@@ -130,7 +132,7 @@ void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
                "dataset '%s' has bad dimesion %d (expected %d, got %d)",
                dsetname, rank, (int)(dims[i]), (int)(thisdims[i]));
       ccatsim_error(message, status);
-      return;
+      goto CLEANUP;
     }
   }
 
@@ -144,7 +146,7 @@ void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
       snprintf(message, CCATSIM_MESSAGE_LEN,
                "could not get units of dataset '%s'", dsetname);
       ccatsim_error(message, status);
-      return;
+      goto CLEANUP;
     }
 
     /* check units */
@@ -154,11 +156,14 @@ void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
                  "dataset '%s' has wrong units (expected %s, got %s)",
                  dsetname, units, thisunits);
         ccatsim_error(message, status);
-        return;
+        goto CLEANUP;
       }
     }
 
   }
+
+ CLEANUP:
+  thisdims = astFree(thisdims);
 
   /* success */
 }
