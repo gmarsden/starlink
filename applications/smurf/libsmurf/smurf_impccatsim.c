@@ -208,6 +208,7 @@ void smurf_impccatsim( int *status ) {
   /* read data into full_bolosig. */
   /* data are to be stored with detector index varying most quickly. */
   ccatsim_getdata(&ccatdata, full_bolosig, status);
+  if (*status != SAI__OK) goto CLEANUP;
 
   /* fits headers */
   fitschan = astFitsChan(NULL, NULL, " ");
