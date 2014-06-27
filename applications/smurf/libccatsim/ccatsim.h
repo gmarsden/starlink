@@ -30,6 +30,8 @@
 *     2014-06-25 (AGM):
 *        Add telpos to data structure
 *        Add srcpos to data structure
+*     2014-06-26 (AGM):
+*        Add telescope name and focal plane rotation
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -77,6 +79,10 @@
  * dataset properties    *
  *************************/
 
+#define CCATSIM_TELESCOPE_NAME "telescope_name"
+#define CCATSIM_TRACKSOURCE_NAME "track_source"
+#define CCATSIM_FPLANEROT_NAME "focal_plane_rotation"
+
 #define CCATSIM_TELRA_NAME   "telescope_ra"
 #define CCATSIM_TELRA_RANK   1
 #define CCATSIM_TELRA_UNIT   "degrees"
@@ -96,8 +102,6 @@
 #define CCATSIM_DETDATA_NAME "timestream_data"
 #define CCATSIM_DETDATA_RANK 2
 #define CCATSIM_DETDATA_UNIT "Jy"
-
-#define CCATSIM_TRACKSOURCE_NAME "track_source"
 
 #define CCATSIM_TELLON_NAME  "telescope_longitude"
 #define CCATSIM_TELLON_RANK  1
@@ -122,6 +126,7 @@
 /* name of units attribute */
 #define CCATSIM_UNITS_NAME   "Units"
 
+#define CCATSIM_ATTR_LEN 80
 #define CCATSIM_MESSAGE_LEN 256
 
 /* data structure */
@@ -134,6 +139,8 @@ typedef struct ccatsim_data {
   double telpos[3];     /* Geodetic location of the telescope
                            lon/lat/alt in deg/deg/m */
   double srcpos[2];     /* source ra/dec in deg */
+  char telname[CCATSIM_ATTR_LEN]; /* telescope name */
+  char fplane_rot[CCATSIM_ATTR_LEN]; /* focal plane rotation type */
 } ccatsim_data;
 
 
@@ -171,5 +178,8 @@ void ccatsim_error(const char *msg, int *status);
 void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
                         const hsize_t *dims, const char *units, int *status);
 
+/* read a single string from data file */
+void ccatsim_getstring(ccatsim_data *data, const char *dsetname, int maxstrlen,
+                       char *string, int *status);
 
 #endif /* CCATSIM_H_DEFINED */

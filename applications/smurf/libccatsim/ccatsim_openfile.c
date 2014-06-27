@@ -35,6 +35,8 @@
 *     2014-06-25 (AGM):
 *        Read telpos into data structure
 *        Read source ra/dec into data structure
+*     2014-06-26 (AGM):
+*        Read telescope name and focal plane rotation
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -120,7 +122,7 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
 
   /* get dimensions using DATASET_NAME_DET_DATA */
   h5error = H5LTget_dataset_info(file_id, CCATSIM_DETDATA_NAME, dims,
-                               NULL, NULL);
+                                 NULL, NULL);
   if (h5error < 0) {
     snprintf(message, CCATSIM_MESSAGE_LEN, "%s",
              "could not retrieve data dimensions");
@@ -218,6 +220,20 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
     ccatsim_error(message, status);
     return;
   }
+
+  /*****************************
+   * general info              *
+   *****************************/
+
+  /* get telescope name */
+  ccatsim_getstring(data, CCATSIM_TELESCOPE_NAME, CCATSIM_ATTR_LEN,
+                    data->telname, status);
+  if (*status != SAI__OK) return;
+
+  /* get focal plane rotation type */
+  ccatsim_getstring(data, CCATSIM_FPLANEROT_NAME, CCATSIM_ATTR_LEN,
+                    data->fplane_rot, status);
+  if (*status != SAI__OK) return;
 
   /* success */
 }
