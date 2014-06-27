@@ -38,6 +38,7 @@
 *     2014-06-26 (AGM):
 *        Read telescope name and focal plane rotation
 *        Read start_mjd and sample_rate
+*        Read dateobs
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -267,6 +268,11 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   /* get focal plane rotation type */
   ccatsim_getstring(data, CCATSIM_FPLANEROT_NAME, CCATSIM_ATTR_LEN,
                     data->fplane_rot, status);
+  if (*status != SAI__OK) return;
+
+  /* get observation date */
+  ccatsim_getstring(data, CCATSIM_DATEOBS_NAME, CCATSIM_ATTR_LEN,
+                    data->dateobs, status);
   if (*status != SAI__OK) return;
 
   /* success */

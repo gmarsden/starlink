@@ -33,6 +33,7 @@
 *     2014-06-26 (AGM):
 *        Add telescope name and focal plane rotation
 *        Add start_mjd and sample_rate
+*        Add dateobs
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -84,6 +85,7 @@
 #define CCATSIM_TELESCOPE_NAME "telescope_name"
 #define CCATSIM_TRACKSOURCE_NAME "track_source"
 #define CCATSIM_FPLANEROT_NAME "focal_plane_rotation"
+#define CCATSIM_DATEOBS_NAME "date_obs"
 
 #define CCATSIM_TELRA_NAME   "telescope_ra"
 #define CCATSIM_TELRA_RANK   1
@@ -157,6 +159,7 @@ typedef struct ccatsim_data {
   double sample_rate;   /* sample rate in Hz */
   char telname[CCATSIM_ATTR_LEN]; /* telescope name */
   char fplane_rot[CCATSIM_ATTR_LEN]; /* focal plane rotation type */
+  char dateobs[CCATSIM_ATTR_LEN]; /* observation date/time */
 } ccatsim_data;
 
 
