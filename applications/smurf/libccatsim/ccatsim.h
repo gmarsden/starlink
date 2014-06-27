@@ -69,6 +69,7 @@
 #include "mers.h"
 #include "sae_par.h"
 #include "star/hds.h"
+#include "star/pal.h"
 #include "ndf.h"
 #include "libsmf/smf.h"
 #include "smurf_par.h"
@@ -124,6 +125,10 @@
 #define CCATSIM_SRCDEC_RANK  1
 #define CCATSIM_SRCDEC_UNIT  "degrees"
 
+#define CCATSIM_LST_NAME     "local_sidereal_time"
+#define CCATSIM_LST_RANK     1
+#define CCATSIM_LST_UNIT     "hours"
+
 #define CCATSIM_STARTMJD_NAME "start_mjd"
 #define CCATSIM_STARTMJD_RANK 1
 
@@ -177,6 +182,9 @@ void ccatsim_getdata(ccatsim_data *data, double *dataptr, int *status);
 /* set fits headers */
 void ccatsim_setfitshead(ccatsim_data *data, AstFitsChan *fitschan,
                          int *status);
+
+/* set JCMTState array */
+void ccatsim_setstate(ccatsim_data *data, JCMTState *state, int *status);
 
 /****************************
  * private access functions *

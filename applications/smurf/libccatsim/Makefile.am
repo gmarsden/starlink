@@ -12,7 +12,8 @@ C_ROUTINES = \
 	ccatsim_getdata.c \
 	ccatsim_getstring.c \
 	ccatsim_openfile.c \
-	ccatsim_setfitshead.c
+	ccatsim_setfitshead.c \
+	ccatsim_setstate.c
 
 noinst_INCLUDES = ccatsim.h
 

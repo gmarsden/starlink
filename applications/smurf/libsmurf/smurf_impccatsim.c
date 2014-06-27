@@ -51,6 +51,8 @@
 *        Initial Version
 *     2014-06-16 (AGM):
 *        Update for ccatsim_data structure
+*     2014-06-27 (AGM):
+*        Add JCMTState headers
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -131,6 +133,7 @@ void smurf_impccatsim( int *status ) {
   char infile[MAXSTRING];      /* input HDF5 file name */
   ccatsim_data ccatdata;       /* structure containing info about input data file */
 
+  struct JCMTState *head=NULL; /* header data for each frame  */
   smfHead hdr;
 
   char ndffile[MAXSTRING];     /* output NDF file name */
@@ -143,6 +146,8 @@ void smurf_impccatsim( int *status ) {
   int ubnd[3];                 /* Dimensions of the DATA component */
   int ncol;                    /* number of bolometers in column  */
   int nrow=1;                  /* number of bolometers in row */
+  int nframes;                 /* number of time steps */
+
   double *full_bolosig=NULL;   /* all bolo signals [ndet x nsamp] */
   AstFitsChan *fitschan=NULL;  /* FITS headers */
 
@@ -164,6 +169,7 @@ void smurf_impccatsim( int *status ) {
     if (*status != SAI__OK) goto CLEANUP;
 
     ncol = ccatdata.ndet;
+    nframes = ccatdata.nsamp;
 
     msgOutiff(MSG__VERB, "", "Simulation tracks source at "
               "RA = %.1lf deg, Dec = %.1lf deg\n",
@@ -180,6 +186,13 @@ void smurf_impccatsim( int *status ) {
     ccatsim_fill_smfHead(&ccatdata, &hdr, status);
     if (*status != SAI__OK) goto CLEANUP;
 
+    /* header for each frame */
+    head = astCalloc(nframes, sizeof(*head));
+
+    /* set state */
+    ccatsim_setstate(&ccatdata, head, status);
+    if (*status != SAI__OK) goto CLEANUP;
+
   }
 
   msgOutif(MSG__VERB," ", "Writing NDF file", status);
@@ -194,8 +207,8 @@ void smurf_impccatsim( int *status ) {
   ubnd[SC2STORE__COL_INDEX] = lbnd[SC2STORE__COL_INDEX] + ncol - 1;
   lbnd[SC2STORE__ROW_INDEX] = SC2STORE__BOL_LBND;
   ubnd[SC2STORE__ROW_INDEX] = lbnd[SC2STORE__ROW_INDEX] + nrow - 1;
-  ubnd[2] = ccatdata.nsamp;
   lbnd[2] = 1;
+  ubnd[2] = nframes;
 
   ndfNew ( "_DOUBLE", 3, lbnd, ubnd, &place, &indf, status );
   ndfHcre ( indf, status );
@@ -215,18 +228,19 @@ void smurf_impccatsim( int *status ) {
   ccatsim_setfitshead(&ccatdata, fitschan, status);
   kpgPtfts(indf, fitschan, status); /* add as extension to ndf */
 
+  /* Create storage for Header values for each frame - store in JCMTSTATE */
+  sc2store_writejcmtstate(indf, nframes, head, status);
 
   /* Close the NDF */
-
+  sc2store_headunmap( status );
   ndfAnnul ( &indf, status );
-
   ndfEnd ( status );
 
  CLEANUP:
   /* Free memory etc */
   ccatsim_free_smfHead(&hdr, status);
   if (fitschan) fitschan = astAnnul( fitschan );
-
+  head = astFree( head );
 
   /* close input file */
   if(ccatdata.isopen) {
