@@ -37,6 +37,7 @@
 *        Read source ra/dec into data structure
 *     2014-06-26 (AGM):
 *        Read telescope name and focal plane rotation
+*        Read start_mjd and sample_rate
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -217,6 +218,39 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   if (h5error < 0) {
     snprintf(message, CCATSIM_MESSAGE_LEN,
              "could not read dataset '%s'", CCATSIM_SRCDEC_NAME);
+    ccatsim_error(message, status);
+    return;
+  }
+
+  /*****************************
+   * timing info               *
+   *****************************/
+
+  /* all fields have single element */
+  dims[0] = 1;
+
+  /* start_mjd */
+  ccatsim_check_dset(data, CCATSIM_STARTMJD_NAME, CCATSIM_STARTMJD_RANK,
+                     dims, NULL, status);
+  if (*status != SAI__OK) return;
+  h5error = H5LTread_dataset(data->file_id, CCATSIM_STARTMJD_NAME,
+                             H5T_NATIVE_DOUBLE, &(data->start_mjd));
+  if (h5error < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN,
+             "could not read dataset '%s'", CCATSIM_STARTMJD_NAME);
+    ccatsim_error(message, status);
+    return;
+  }
+
+  /* sample rate */
+  ccatsim_check_dset(data, CCATSIM_SAMPRATE_NAME, CCATSIM_SAMPRATE_RANK,
+                     dims, CCATSIM_SAMPRATE_UNIT, status);
+  if (*status != SAI__OK) return;
+  h5error = H5LTread_dataset(data->file_id, CCATSIM_SAMPRATE_NAME,
+                             H5T_NATIVE_DOUBLE, &(data->sample_rate));
+  if (h5error < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN,
+             "could not read dataset '%s'", CCATSIM_SAMPRATE_NAME);
     ccatsim_error(message, status);
     return;
   }

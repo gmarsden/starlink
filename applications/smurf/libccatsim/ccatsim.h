@@ -32,6 +32,7 @@
 *        Add srcpos to data structure
 *     2014-06-26 (AGM):
 *        Add telescope name and focal plane rotation
+*        Add start_mjd and sample_rate
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -119,9 +120,17 @@
 #define CCATSIM_SRCRA_RANK   1
 #define CCATSIM_SRCRA_UNIT   "degrees"
 
-#define CCATSIM_SRCDEC_NAME   "source_dec"
-#define CCATSIM_SRCDEC_RANK   1
-#define CCATSIM_SRCDEC_UNIT   "degrees"
+#define CCATSIM_SRCDEC_NAME  "source_dec"
+#define CCATSIM_SRCDEC_RANK  1
+#define CCATSIM_SRCDEC_UNIT  "degrees"
+
+#define CCATSIM_STARTMJD_NAME "start_mjd"
+#define CCATSIM_STARTMJD_RANK 1
+
+#define CCATSIM_SAMPRATE_NAME "sample_rate"
+#define CCATSIM_SAMPRATE_RANK 1
+#define CCATSIM_SAMPRATE_UNIT "Hz"
+
 
 /* name of units attribute */
 #define CCATSIM_UNITS_NAME   "Units"
@@ -139,6 +148,8 @@ typedef struct ccatsim_data {
   double telpos[3];     /* Geodetic location of the telescope
                            lon/lat/alt in deg/deg/m */
   double srcpos[2];     /* source ra/dec in deg */
+  double start_mjd;     /* MJD of first sample */
+  double sample_rate;   /* sample rate in Hz */
   char telname[CCATSIM_ATTR_LEN]; /* telescope name */
   char fplane_rot[CCATSIM_ATTR_LEN]; /* focal plane rotation type */
 } ccatsim_data;
