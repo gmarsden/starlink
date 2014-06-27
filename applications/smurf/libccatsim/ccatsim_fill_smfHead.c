@@ -37,6 +37,8 @@
 *  History:
 *     2014-06-16 (AGM):
 *        Initial version
+*     2014-06-27 (AGM):
+*        Handle focal plane rotation types
 
 *  Copyright:
 *     Copyright (C) 2006 Particle Physics and Astronomy Research Council.
@@ -75,6 +77,7 @@ void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status) {
   double * fplanex = NULL; /* X coordinates in radians */
   double * fplaney = NULL; /* Y coordinates in radians */
   unsigned int i;          /* loop counter */
+  double xdir;             /* direction of +x */
 
   herr_t h5error;          /* hdf5 error status */
   int ndim;                /* rank */
@@ -131,10 +134,13 @@ void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status) {
       return;
     }
 
-    /* convert from deg to radians */
+    /* if focal plane rotation is radec, switch X direction*/
+    xdir = (strcmp(data->fplane_rot, "radec") == 0) ? -1.0 : 1.0;
+
+    /* convert from deg to radians (and swap direction if necessary) */
     if (fplanex && fplaney) {
       for (i = 0; i < hdr->ndet; i++) {
-	fplanex[i] *= AST__DD2R;
+	fplanex[i] *= xdir * AST__DD2R;
 	fplaney[i] *= AST__DD2R;
       }
     }
