@@ -31,6 +31,8 @@
 *  History:
 *     2014-06-18 (AGM):
 *        Initial Version
+*     2014-06-27 (AGM):
+*        Add some new headers
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -87,5 +89,10 @@ void ccatsim_setfitshead(ccatsim_data *data, AstFitsChan *fitschan,
 
     astSetFitsI(fitschan, "NUMDET", data->ndet, "number of detectors", 0);
     astSetFitsI(fitschan, "NUMSAMP", data->nsamp, "number of samples", 0);
+    astSetFitsS(fitschan, "TELESCOP", data->telname, "Name of telescope", 0);
+    astSetFitsS(fitschan, "DATE-OBS", data->dateobs, "Observation Date", 0);
+    astSetFitsF(fitschan, "RA", data->srcpos[0], "Right Ascension of observation [deg]", 0);
+    astSetFitsF(fitschan, "DEC", data->srcpos[1], "Declination of observation [deg]", 0);
+
   }
 }
