@@ -171,6 +171,9 @@ void ccatsim_setstate(ccatsim_data *data, JCMTState *state, int *status) {
     state[i].rts_end = mjd;
     state[i].tcs_tai = mjd;
 
+    /* tracking system */
+    snprintf(state[i].tcs_tr_sys,6,"J2000");
+
     /* nominal pointing center */
     state[i].tcs_tr_bc1 = data->srcpos[0] * AST__DD2R;
     state[i].tcs_tr_bc2 = data->srcpos[1] * AST__DD2R;
@@ -234,7 +237,7 @@ void ccatsim_setstate(ccatsim_data *data, JCMTState *state, int *status) {
     state[i].smu_x         = 0.0;
     state[i].smu_y         = 0.0;
     state[i].smu_z         = 0.0;
-    strcpy( state[i].smu_chop_phase, " ");
+    snprintf(state[i].smu_chop_phase, 2, " ");
     state[i].smu_jig_index = 0;
     state[i].smu_az_jig_x  = 0.0;
     state[i].smu_az_jig_y  = 0.0;
@@ -244,6 +247,14 @@ void ccatsim_setstate(ccatsim_data *data, JCMTState *state, int *status) {
     state[i].smu_tr_jig_y  = 0.0;
     state[i].smu_tr_chop_x = 0.0;
     state[i].smu_tr_chop_y = 0.0;
+
+    /* Other headers - more to be added as necessary */
+    one_strlcpy( state[i].smu_chop_phase, "M",
+                 sizeof(state[i].smu_chop_phase), status );
+    one_strlcpy( state[i].tcs_beam, "M",
+                 sizeof(state[i].tcs_beam), status );
+    one_strlcpy( state[i].tcs_source, "SCIENCE",
+                 sizeof(state[i].tcs_source), status);
 
     /* No polarimeter or FTS */
     state[i].pol_ang = VAL__BADD;

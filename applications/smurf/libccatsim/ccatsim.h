@@ -70,6 +70,7 @@
 #include "mers.h"
 #include "sae_par.h"
 #include "star/hds.h"
+#include "star/one.h"
 #include "star/pal.h"
 #include "ndf.h"
 #include "libsmf/smf.h"
