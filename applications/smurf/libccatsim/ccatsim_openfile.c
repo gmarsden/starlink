@@ -39,6 +39,8 @@
 *        Read telescope name and focal plane rotation
 *        Read start_mjd and sample_rate
 *        Read dateobs
+*     2014-06-30 (AGM):
+*        Read instrument name and band name
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -121,6 +123,21 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
     ccatsim_error("Simulation does not track source. Exiting.", status);
     return;
   }
+
+  /* check that band name is given and that there is only one band_name */
+  dims[0] = 1;
+  ccatsim_check_dset(data, CCATSIM_BAND_NAME, 1, dims, NULL, status);
+  if (*status != SAI__OK) {
+    snprintf(message, CCATSIM_MESSAGE_LEN,
+             "band name not set, or more than one bands in dataset");
+    ccatsim_error(message, status);
+  }
+
+  /* now get band name */
+  ccatsim_getstring(data, CCATSIM_BAND_NAME, CCATSIM_ATTR_LEN,
+                    data->bandname, status);
+  if (*status != SAI__OK) return;
+
 
   /* get dimensions using DATASET_NAME_DET_DATA */
   h5error = H5LTget_dataset_info(file_id, CCATSIM_DETDATA_NAME, dims,
@@ -263,6 +280,11 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   /* get telescope name */
   ccatsim_getstring(data, CCATSIM_TELESCOPE_NAME, CCATSIM_ATTR_LEN,
                     data->telname, status);
+  if (*status != SAI__OK) return;
+
+  /* get instrument name */
+  ccatsim_getstring(data, CCATSIM_INSTRUMENT_NAME, CCATSIM_ATTR_LEN,
+                    data->instname, status);
   if (*status != SAI__OK) return;
 
   /* get focal plane rotation type */

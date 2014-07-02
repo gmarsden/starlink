@@ -34,6 +34,8 @@
 *        Add telescope name and focal plane rotation
 *        Add start_mjd and sample_rate
 *        Add dateobs
+*     2014-06-30 (AGM):
+*        Add instrument name, band name
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -84,6 +86,8 @@
  *************************/
 
 #define CCATSIM_TELESCOPE_NAME "telescope_name"
+#define CCATSIM_INSTRUMENT_NAME "instrument_name"
+#define CCATSIM_BAND_NAME "band_name"
 #define CCATSIM_TRACKSOURCE_NAME "track_source"
 #define CCATSIM_FPLANEROT_NAME "focal_plane_rotation"
 #define CCATSIM_DATEOBS_NAME "date_obs"
@@ -159,6 +163,8 @@ typedef struct ccatsim_data {
   double start_mjd;     /* MJD of first sample */
   double sample_rate;   /* sample rate in Hz */
   char telname[CCATSIM_ATTR_LEN]; /* telescope name */
+  char instname[CCATSIM_ATTR_LEN]; /* instrument name */
+  char bandname[CCATSIM_ATTR_LEN]; /* band name */
   char fplane_rot[CCATSIM_ATTR_LEN]; /* focal plane rotation type */
   char dateobs[CCATSIM_ATTR_LEN]; /* observation date/time */
 } ccatsim_data;
