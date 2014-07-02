@@ -33,6 +33,8 @@
 *        Initial Version
 *     2014-06-27 (AGM):
 *        Add some new headers
+*     2014-07-02 (AGM):
+*        Add headers required by makemap
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -73,6 +75,23 @@
 void ccatsim_setfitshead(ccatsim_data *data, AstFitsChan *fitschan,
                          int *status)
 {
+  char obsid[CCATSIM_ATTR_LEN]; /* obs id fits header */
+  char obsidss[CCATSIM_ATTR_LEN]; /* obs id + subsystem fits header */
+
+  /* get date info from dateobs */
+  int date_yr;
+  int date_mo;
+  int date_da;
+  int date_hr;
+  int date_mn;
+  double date_sc;
+
+  /* wavelength (from bandname field) */
+  double wavelen;
+  char *endptr;           /* used for error checking in conversion */
+
+  unsigned int utdate;    /* utdate yyyymmdd */
+
   if (*status == SAI__OK) {
 
     /* check that data has been loaded */
@@ -87,12 +106,49 @@ void ccatsim_setfitshead(ccatsim_data *data, AstFitsChan *fitschan,
       return;
     }
 
+    /* get date info for obsid */
+    sscanf(data->dateobs, "%4d-%2d-%2dT%2d:%2d%lf", &date_yr, &date_mo, &date_da,
+           &date_hr, &date_mn, &date_sc);
+
+    /* build obsid */
+    sprintf(obsid, "%s_%05d_%04d%02d%02dT%02d%02d%02d",
+            data->instname, CCATSIM_OBSNUM, date_yr, date_mo, date_da,
+            date_hr,date_mn,(int)(round(date_sc)));
+
+    /* obsidss */
+    snprintf(obsidss, CCATSIM_ATTR_LEN, "%s_%s", obsid, data->bandname);
+
+    /* get wavelength */
+    wavelen = strtod(data->bandname, &endptr);
+    if (endptr == data->bandname) { /* warn on conversion failure */
+      msgSetc("NAME", CCATSIM_BAND_NAME);
+      msgOutif(MSG__NORM, "", "Attribute '^NAME' is not numeric", status);
+    }
+
+    /* utdate */
+    utdate = date_yr*10000 + date_mo*100 + date_da;
+
     astSetFitsI(fitschan, "NUMDET", data->ndet, "number of detectors", 0);
     astSetFitsI(fitschan, "NUMSAMP", data->nsamp, "number of samples", 0);
     astSetFitsS(fitschan, "TELESCOP", data->telname, "Name of telescope", 0);
+    astSetFitsS(fitschan, "INSTRUME", data->instname, "Name of instrument", 0);
+    astSetFitsF(fitschan, "WAVELEN", wavelen, "Observing wavelength", 0);
     astSetFitsS(fitschan, "DATE-OBS", data->dateobs, "Observation Date", 0);
+    astSetFitsS(fitschan, "OBSID", obsid, "Unique observation identifier", 0);
+    astSetFitsS(fitschan, "OBSIDSS", obsidss, "Unique observation identifier (w/ subsystem)", 0);
     astSetFitsF(fitschan, "RA", data->srcpos[0], "Right Ascension of observation [deg]", 0);
     astSetFitsF(fitschan, "DEC", data->srcpos[1], "Declination of observation [deg]", 0);
+    astSetFitsS(fitschan, "OBJECT", CCATSIM_OBJECT, "Target of observation", 0);
+    astSetFitsI(fitschan, "OBSNUM", CCATSIM_OBSNUM, "Observation number", 0);
+    astSetFitsI(fitschan, "UTDATE", utdate, "UT Date as integer in yyyymmdd format", 0);
+    astSetFitsL(fitschan, "SIMULATE", CCATSIM_SIMULATE, "True if any data are simulated", 0);
+    astSetFitsS(fitschan, "ARRAYID", CCATSIM_ARRAYID, "Manufacturer's serial number", 0);
+    astSetFitsI(fitschan, "SEQCOUNT", CCATSIM_SEQCOUNT, "Setup Sequence Counter", 0);
+    astSetFitsI(fitschan, "SHUTTER", CCATSIM_SHUTTER, "shutter position 0-Closed 1-Open", 0);
+    astSetFitsS(fitschan, "SUBARRAY", CCATSIM_SUBARRAY, "", 0);
 
+    /* SEQSTART: assume that JCMTState rts_num starts at 0 and ends at nsamp-1 */
+    astSetFitsI(fitschan, "SEQSTART", 0, "RTS index number of first frame", 0);
+    astSetFitsI(fitschan, "SEQEND", data->nsamp-1, "RTS index number of last frame", 0);
   }
 }

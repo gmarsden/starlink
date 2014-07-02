@@ -36,6 +36,8 @@
 *        Add dateobs
 *     2014-06-30 (AGM):
 *        Add instrument name, band name
+*     2014-07-02 (AGM):
+*        Hard code some required headers
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -143,12 +145,20 @@
 #define CCATSIM_SAMPRATE_RANK 1
 #define CCATSIM_SAMPRATE_UNIT "Hz"
 
-
 /* name of units attribute */
 #define CCATSIM_UNITS_NAME   "Units"
 
 #define CCATSIM_ATTR_LEN 80
 #define CCATSIM_MESSAGE_LEN 256
+
+/* hard-coded header info */
+#define CCATSIM_OBSNUM    0
+#define CCATSIM_OBJECT    "simulation"
+#define CCATSIM_SIMULATE  1
+#define CCATSIM_ARRAYID   "0000"
+#define CCATSIM_SEQCOUNT  1
+#define CCATSIM_SHUTTER   1
+#define CCATSIM_SUBARRAY  ""
 
 /* data structure */
 typedef struct ccatsim_data {
