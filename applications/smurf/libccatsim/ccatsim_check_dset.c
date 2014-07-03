@@ -40,9 +40,10 @@
 *        Initial version
 *     2014-06-26 (AGM):
 *        Clean up memory usage
+*     {enter_further_changes_here}
 
 *  Copyright:
-*     Copyright (C) 2006 Particle Physics and Astronomy Research Council.
+*     Copyright (C) 2014 Univeristy of British Columbia.
 *     All Rights Reserved.
 
 *  Licence:
