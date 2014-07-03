@@ -10,11 +10,11 @@
 *     Starlink ANSI C
 
 *  Invocation:
-*     ccatsim_setfitshead(ccatsim_data *data, AstFitsChan *fitschan,
+*     ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
 *                         int *status);
 
 *  Arguments:
-*     data = ccatsim_data * (Given)
+*     data = const ccatsim_data * (Given)
 *        data structure containing file info
 *     fitschan = AstFitsChan * (Returned)
 *        pointer to fitschan object to be filled
@@ -35,6 +35,8 @@
 *        Add some new headers
 *     2014-07-02 (AGM):
 *        Add headers required by makemap
+*     2014-07-03 (AGM):
+*        Make ccatsim_data* const
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -72,7 +74,7 @@
 
 #define EXTENSION "CCATSIM"
 
-void ccatsim_setfitshead(ccatsim_data *data, AstFitsChan *fitschan,
+void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
                          int *status)
 {
   char obsid[CCATSIM_ATTR_LEN]; /* obs id fits header */

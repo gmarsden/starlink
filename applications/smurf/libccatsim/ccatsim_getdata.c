@@ -10,10 +10,10 @@
 *     ANSI C
 
 *  Invocation:
-*     void ccatsim_getdata(ccatsim_data *data, double *dataptr, int *status);
+*     void ccatsim_getdata(const ccatsim_data *data, double *dataptr, int *status);
 
 *  Arguments:
-*     data = ccatsim_data * (Given)
+*     data = const ccatsim_data * (Given)
 *        Pointer to data structure from which hdr info will be read
 *     dataptr = double * (Returned)
 *        Pointer to data array. Memory should already be allocated.
@@ -34,6 +34,8 @@
 *  History:
 *     2014-06-17 (AGM):
 *        Initial version
+*     2014-07-03 (AGM):
+*        Make ccatsim_data* const
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -68,7 +70,7 @@
 
 #define EXTENSION "CCATSIM"
 
-void ccatsim_getdata(ccatsim_data *data, double *dataptr, int *status) {
+void ccatsim_getdata(const ccatsim_data *data, double *dataptr, int *status) {
 
   herr_t h5error;          /* hdf5 error status */
   hsize_t dims[CCATSIM_DETDATA_RANK]; /* dimensions */

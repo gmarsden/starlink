@@ -38,6 +38,8 @@
 *        Add instrument name, band name
 *     2014-07-02 (AGM):
 *        Hard code some required headers
+*     2014-07-03 (AGM):
+*        Make ccatsim_data* const in function prototypes, where applicable
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -191,20 +193,20 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status);
 void ccatsim_closefile(ccatsim_data *data, int *status);
 
 /* read detector focal plane positions into smfhead */
-void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status);
+void ccatsim_fill_smfHead(const ccatsim_data *data, smfHead *hdr, int *status);
 
 /* free memory in smfHead initialized by fill_smfHead */
 void ccatsim_free_smfHead(smfHead *hdr, int *status);
 
 /* read detector data into array */
-void ccatsim_getdata(ccatsim_data *data, double *dataptr, int *status);
+void ccatsim_getdata(const ccatsim_data *data, double *dataptr, int *status);
 
 /* set fits headers */
-void ccatsim_setfitshead(ccatsim_data *data, AstFitsChan *fitschan,
+void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
                          int *status);
 
 /* set JCMTState array */
-void ccatsim_setstate(ccatsim_data *data, JCMTState *state, int *status);
+void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status);
 
 /****************************
  * private access functions *
@@ -214,11 +216,11 @@ void ccatsim_setstate(ccatsim_data *data, JCMTState *state, int *status);
 void ccatsim_error(const char *msg, int *status);
 
 /* check dataset properties */
-void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
+void ccatsim_check_dset(const ccatsim_data *data, const char *dsetname, int rank,
                         const hsize_t *dims, const char *units, int *status);
 
 /* read a single string from data file */
-void ccatsim_getstring(ccatsim_data *data, const char *dsetname, int maxstrlen,
+void ccatsim_getstring(const ccatsim_data *data, const char *dsetname, int maxstrlen,
                        char *string, int *status);
 
 #endif /* CCATSIM_H_DEFINED */

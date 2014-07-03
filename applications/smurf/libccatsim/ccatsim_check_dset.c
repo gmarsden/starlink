@@ -10,11 +10,11 @@
 *     ANSI C
 
 *  Invocation:
-*     void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
+*     void ccatsim_check_dset(const ccatsim_data *data, const char *dsetname, int rank,
 *                             const hsize_t *dims, const char *units, int *status);
 
 *  Arguments:
-*     data = ccatsim_data * (Given)
+*     data = const ccatsim_data * (Given)
 *        Pointer to data structure
 *     dsetname = const char * (Given)
 *        Name of dataset to check
@@ -40,6 +40,8 @@
 *        Initial version
 *     2014-06-26 (AGM):
 *        Clean up memory usage
+*     2014-07-03 (AGM):
+*        Make ccatsim_data* const
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -74,7 +76,7 @@
 
 #define EXTENSION "CCATSIM"
 
-void ccatsim_check_dset(ccatsim_data *data, const char *dsetname, int rank,
+void ccatsim_check_dset(const ccatsim_data *data, const char *dsetname, int rank,
                         const hsize_t *dims, const char *units, int *status)
 {
   int i;                   /* loop counter */

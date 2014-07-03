@@ -10,10 +10,10 @@
 *     ANSI C
 
 *  Invocation:
-*     void ccatsim_setstate(ccatsim_data *data, JCMTState *state, int *status);
+*     void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status);
 
 *  Arguments:
-*     data = ccatsim_data * (Given)
+*     data = const ccatsim_data * (Given)
 *        Pointer to data structure from which hdr info will be read
 *     state = JCMTState * (Returned)
 *        Pointer to array of JCMT state records. Memory should already be allocated.
@@ -30,6 +30,8 @@
 *  History:
 *     2014-06-25 (AGM):
 *        Initial version
+*     2014-07-03 (AGM):
+*        Make ccatsim_data* const
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -64,7 +66,7 @@
 
 #define EXTENSION "CCATSIM"
 
-void ccatsim_setstate(ccatsim_data *data, JCMTState *state, int *status) {
+void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status) {
 
   herr_t h5error;          /* hdf5 error status */
   hsize_t dim;             /* dimension of array (all arrays used are 1-d) */

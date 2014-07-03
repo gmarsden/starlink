@@ -10,10 +10,10 @@
 *     ANSI C
 
 *  Invocation:
-*     void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status);
+*     void ccatsim_fill_smfHead(const ccatsim_data *data, smfHead *hdr, int *status);
 
 *  Arguments:
-*     data = ccatsim_data * (Given)
+*     data = const ccatsim_data * (Given)
 *        Pointer to data structure from which hdr info will be read
 *     hdr = smfHead* (Given/Returned)
 *        Pointer to the smfHead that will be filled with ccatsim information
@@ -39,6 +39,8 @@
 *        Initial version
 *     2014-06-27 (AGM):
 *        Handle focal plane rotation types
+*     2014-07-03 (AGM):
+*        Make ccatsim_data* const
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -73,7 +75,7 @@
 
 #define EXTENSION "CCATSIM"
 
-void ccatsim_fill_smfHead(ccatsim_data *data, smfHead *hdr, int *status) {
+void ccatsim_fill_smfHead(const ccatsim_data *data, smfHead *hdr, int *status) {
 
   double * fplanex = NULL; /* X coordinates in radians */
   double * fplaney = NULL; /* Y coordinates in radians */
