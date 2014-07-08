@@ -39,6 +39,7 @@
 *  Authors:
 *     TIMJ: Tim Jenness (JAC, Hawaii)
 *     BDK: Dennis Kelly (UKATC, Edinburgh)
+*     AGM: Gaelen Marsden (UBC, Canada)
 
 *  History:
 *     17-AUG-2004 (BDK):
@@ -81,6 +82,8 @@
 *        Add SC2_1KNTDTEMP
 *     2012-12-09 (TIMJ):
 *        Add SC2_MAG_X,Y,Z
+*     2014-07-07 (AGM):
+*        Add INST__SWCAM
 
 *  Copyright:
 *     Copyright (C) 2008-2012 Science and Technology Facilities Council.
@@ -132,6 +135,7 @@ typedef enum {
   INST__ACSIS  = 0x00000001,
   INST__SCUBA2 = 0x00000002,
   INST__AZTEC  = 0x00000004,
+  INST__SWCAM  = 0x00000008,
   INST__ALL    = 0x0FFFFFFF  /* All bits set */
 } inst_t;
 

@@ -38,6 +38,7 @@
 *  Authors:
 *     TIMJ: Tim Jenness (JAC, Hawaii)
 *     JB: Jen Balfour (JAC, Hawaii)
+*     AGM: Gaelen Marsden (UBC)
 
 *  History:
 *     31-JUL-2006 (TIMJ):
@@ -55,10 +56,13 @@
 *        Add Supercam.
 *     2014-04-10 (TIMJ):
 *        Add NANTEN2 SMART
+*     2014-07-08 (AGM):
+*        Add CCAT/SWCAM
 
 *  Copyright:
 *     Copyright (C) 2006 Particle Physics and Astronomy Research Council.
 *     Copyright (C) 2014 Cornell University.
+*     Copyright (C) 2014 University of British Columbia.
 *     All Rights Reserved.
 
 *  Licence:
@@ -133,6 +137,12 @@ smf_inst_get( const smfHead * hdr, inst_t * instrument,
 		status );
       *instrument = INST__AZTEC;
       *realinst = SMF__RINST_AZTEC;
+      return;
+    } else if ( strncmp( instrume, "SWCAM", sizeof(instrume) ) == 0 ) {
+      msgOutif( MSG__DEBUG, " ", "Data file contains SWCam data",
+		status );
+      *instrument = INST__SWCAM;
+      *realinst = SMF__RINST_SWCAM;
       return;
     }
   }

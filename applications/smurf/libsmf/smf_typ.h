@@ -24,6 +24,7 @@
  *     Ed Chapin (UBC)
  *     David Berry (JAC, UCLan)
  *     Coskun Oba (COBA, UoL)
+ *     Gaelen Marsden (AGM, UBC)
  *     {enter_new_authors_here}
 
  *  History:
@@ -190,12 +191,14 @@
 *        Add isFFT to smfData
 *     2011-10-03 (EC):
 *        Extend smfFilter to handle 2-d map filters
+*     2014-07-07 (AGM):
+*        Add SMF__RINST_SWCAM type
 *     {enter_further_changes_here}
 
  *  Copyright:
  *     Copyright (C) 2008-2010 Science and Technology Facilities Council.
  *     Copyright (C) 2005-2006 Particle Physics and Astronomy Research Council.
- *     Copyright (C) 2005-2011 University of British Columbia.
+ *     Copyright (C) 2005-2011,2014 University of British Columbia.
  *     All Rights Reserved.
 
  *  Licence:
@@ -357,7 +360,8 @@ typedef enum {
   SMF__RINST_DAS,
   SMF__RINST_AZTEC,
   SMF__RINST_SUPERCAM,
-  SMF__RINST_SMART
+  SMF__RINST_SMART,
+  SMF__RINST_SWCAM
 } smf_realinst_t;
 
 typedef enum {

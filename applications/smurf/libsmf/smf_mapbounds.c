@@ -68,6 +68,7 @@
 *     Tim Jenness (JAC, Hawaii)
 *     Andy Gibb (UBC)
 *     David Berry
+*     AGM: Gaelen Marsden (UBC)
 *     {enter_new_authors_here}
 
 *  History:
@@ -175,6 +176,8 @@
 *     2014-07-7 (DSB):
 *        Ensure Epoch in returned SKyFrame is set from the data rather
 *        than any supplied spatial reference FrameSet.
+*     2014-07-08 (AGM):
+*        - handle SWCAM (try using acsis routine)
 *     {enter_further_changes_here}
 
 *  Notes:
@@ -183,7 +186,7 @@
 *  Copyright:
 *     Copyright (C) 2008-2012 Science and Technology Facilities Council.
 *     Copyright (C) 2005-2007 Particle Physics and Astronomy Research Council.
-*     Copyright (C) 2005-2008 University of British Columbia.
+*     Copyright (C) 2005-2008,2014 University of British Columbia.
 *     All Rights Reserved.
 
 *  Licence:
@@ -409,6 +412,7 @@ void smf_mapbounds( int fast, Grp *igrp,  int size, const char *system,
         break;
 
       case INST__ACSIS:
+      case INST__SWCAM:
         smf_find_acsis_corners( data, x_array_corners, y_array_corners,
                                 status);
         break;

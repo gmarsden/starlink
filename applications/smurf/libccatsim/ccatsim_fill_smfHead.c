@@ -41,6 +41,8 @@
 *        Handle focal plane rotation types
 *     2014-07-03 (AGM):
 *        Make ccatsim_data* const
+*     2014-07-08 (AGM):
+*        Set instrument
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -151,6 +153,9 @@ void ccatsim_fill_smfHead(const ccatsim_data *data, smfHead *hdr, int *status) {
     /* now store in the header */
     hdr->fplanex = fplanex;
     hdr->fplaney = fplaney;
+
+    /* set instrument */
+    hdr->instrument = INST__SWCAM;
 
   }
 
