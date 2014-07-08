@@ -42,6 +42,7 @@
 *        Make ccatsim_data* const in function prototypes, where applicable
 *     2014-07-08 (AGM):
 *        Add scan_speed
+*        Add more required headers
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -167,6 +168,10 @@
 #define CCATSIM_SEQCOUNT  1
 #define CCATSIM_SHUTTER   1
 #define CCATSIM_SUBARRAY  ""
+#define CCATSIM_SAMMODE   "scan"
+#define CCATSIM_SWMODE    "self"
+#define CCATSIM_OBSTYPE   "science"
+#define CCATSIM_INBEAM    ""
 
 /* data structure */
 typedef struct ccatsim_data {

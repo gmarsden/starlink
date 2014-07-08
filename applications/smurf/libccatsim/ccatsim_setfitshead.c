@@ -39,6 +39,7 @@
 *        Make ccatsim_data* const
 *     2014-07-08 (AGM):
 *        Add scan_speed
+*        Add more required headers
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -150,6 +151,11 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
     astSetFitsI(fitschan, "SEQCOUNT", CCATSIM_SEQCOUNT, "Setup Sequence Counter", 0);
     astSetFitsI(fitschan, "SHUTTER", CCATSIM_SHUTTER, "shutter position 0-Closed 1-Open", 0);
     astSetFitsS(fitschan, "SUBARRAY", CCATSIM_SUBARRAY, "", 0);
+    astSetFitsS(fitschan, "SAM_MODE", CCATSIM_SAMMODE, "Sampling Mode", 0);
+    astSetFitsS(fitschan, "SW_MODE", CCATSIM_SWMODE, "Switching Mode", 0);
+    astSetFitsS(fitschan, "OBS_TYPE", CCATSIM_OBSTYPE, "Type of observation", 0);
+    astSetFitsS(fitschan, "INBEAM", CCATSIM_INBEAM, "Hardware in the beam", 0);
+    astSetFitsF(fitschan, "STEPTIME", 1.0/data->sample_rate, "Samp steptime [s]", 0);
     astSetFitsF(fitschan, "SCAN_VEL", data->scan_speed/DAS2D, "[arcsec/s] Scan velocity", 0);
 
     /* SEQSTART: assume that JCMTState rts_num starts at 0 and ends at nsamp-1 */
