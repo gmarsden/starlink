@@ -43,6 +43,8 @@
 *     2014-07-08 (AGM):
 *        Add scan_speed
 *        Add more required headers
+*        Remove fill/free_smfHead
+*        Add writebolo routine and defines
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -82,11 +84,23 @@
 #include "star/one.h"
 #include "star/pal.h"
 #include "ndf.h"
+#include "star/hds.h"
 #include "libsmf/smf.h"
 #include "smurf_par.h"
 
 #include <hdf5.h>
 #include <hdf5_hl.h>
+
+/*************************
+ * output properties     *
+ *************************/
+
+#define CCATSIM_BOLOPOS_NAME "BOLOPOS"
+#define CCATSIM_BOLOPOS_TYPE "BOLOPOST"
+#define CCATSIM_BOLOPOS_NDET "NDET"
+#define CCATSIM_BOLOARR_X    "FPLANEX"
+#define CCATSIM_BOLOARR_Y    "FPLANEY"
+#define CCATSIM_BOLOARR_TYPE "_DOUBLE"
 
 /*************************
  * dataset properties    *
@@ -204,12 +218,6 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status);
 /* close file pointer (and free mem if necessary) */
 void ccatsim_closefile(ccatsim_data *data, int *status);
 
-/* read detector focal plane positions into smfhead */
-void ccatsim_fill_smfHead(const ccatsim_data *data, smfHead *hdr, int *status);
-
-/* free memory in smfHead initialized by fill_smfHead */
-void ccatsim_free_smfHead(smfHead *hdr, int *status);
-
 /* read detector data into array */
 void ccatsim_getdata(const ccatsim_data *data, double *dataptr, int *status);
 
@@ -219,6 +227,9 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
 
 /* set JCMTState array */
 void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status);
+
+/* write bolo locations to ndf extension */
+void ccatsim_writebolo(const ccatsim_data *data, int indf, int *status);
 
 /****************************
  * private access functions *

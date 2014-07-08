@@ -53,6 +53,9 @@
 *        Update for ccatsim_data structure
 *     2014-06-27 (AGM):
 *        Add JCMTState headers
+*     2014-07-08 (AGM):
+*        Remove calls to smfHead (not needed)
+*        Add call to ccatsim_writebolo (writes bolo positions to ndf extension)
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -134,7 +137,6 @@ void smurf_impccatsim( int *status ) {
   ccatsim_data ccatdata;       /* structure containing info about input data file */
 
   struct JCMTState *head=NULL; /* header data for each frame  */
-  smfHead hdr;
 
   char ndffile[MAXSTRING];     /* output NDF file name */
   int place=0;                 /* NDF placeholder */
@@ -153,7 +155,6 @@ void smurf_impccatsim( int *status ) {
 
   /* set defaults */
   memset(&ccatdata, 0, sizeof(ccatdata));
-  memset(&hdr, 0, sizeof(hdr));
 
   /* Get the user defined input and output file names */
   parGet0c( "IN", infile, MAXSTRING, status);
@@ -181,10 +182,6 @@ void smurf_impccatsim( int *status ) {
 
   /* handle data */
   if( *status == SAI__OK ) {
-
-    /* Populate bolo LUT */
-    ccatsim_fill_smfHead(&ccatdata, &hdr, status);
-    if (*status != SAI__OK) goto CLEANUP;
 
     /* header for each frame */
     head = astCalloc(nframes, sizeof(*head));
@@ -231,6 +228,9 @@ void smurf_impccatsim( int *status ) {
   /* Create storage for Header values for each frame - store in JCMTSTATE */
   sc2store_writejcmtstate(indf, nframes, head, status);
 
+  /* Write bolo positions */
+  ccatsim_writebolo(&ccatdata, indf, status);
+
   /* Close the NDF */
   sc2store_headunmap( status );
   ndfAnnul ( &indf, status );
@@ -238,7 +238,6 @@ void smurf_impccatsim( int *status ) {
 
  CLEANUP:
   /* Free memory etc */
-  ccatsim_free_smfHead(&hdr, status);
   if (fitschan) fitschan = astAnnul( fitschan );
   head = astFree( head );
 
