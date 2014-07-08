@@ -40,6 +40,8 @@
 *        Hard code some required headers
 *     2014-07-03 (AGM):
 *        Make ccatsim_data* const in function prototypes, where applicable
+*     2014-07-08 (AGM):
+*        Add scan_speed
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -147,6 +149,10 @@
 #define CCATSIM_SAMPRATE_RANK 1
 #define CCATSIM_SAMPRATE_UNIT "Hz"
 
+#define CCATSIM_SCANSPEED_NAME "scan_speed"
+#define CCATSIM_SCANSPEED_RANK 1
+#define CCATSIM_SCANSPEED_UNIT "deg/s"
+
 /* name of units attribute */
 #define CCATSIM_UNITS_NAME   "Units"
 
@@ -174,6 +180,7 @@ typedef struct ccatsim_data {
   double srcpos[2];     /* source ra/dec in deg */
   double start_mjd;     /* MJD of first sample */
   double sample_rate;   /* sample rate in Hz */
+  double scan_speed;    /* scan speed in deg/s */
   char telname[CCATSIM_ATTR_LEN]; /* telescope name */
   char instname[CCATSIM_ATTR_LEN]; /* instrument name */
   char bandname[CCATSIM_ATTR_LEN]; /* band name */

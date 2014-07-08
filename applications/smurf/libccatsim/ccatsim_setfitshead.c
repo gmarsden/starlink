@@ -37,6 +37,8 @@
 *        Add headers required by makemap
 *     2014-07-03 (AGM):
 *        Make ccatsim_data* const
+*     2014-07-08 (AGM):
+*        Add scan_speed
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -148,6 +150,7 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
     astSetFitsI(fitschan, "SEQCOUNT", CCATSIM_SEQCOUNT, "Setup Sequence Counter", 0);
     astSetFitsI(fitschan, "SHUTTER", CCATSIM_SHUTTER, "shutter position 0-Closed 1-Open", 0);
     astSetFitsS(fitschan, "SUBARRAY", CCATSIM_SUBARRAY, "", 0);
+    astSetFitsF(fitschan, "SCAN_VEL", data->scan_speed/DAS2D, "[arcsec/s] Scan velocity", 0);
 
     /* SEQSTART: assume that JCMTState rts_num starts at 0 and ends at nsamp-1 */
     astSetFitsI(fitschan, "SEQSTART", 0, "RTS index number of first frame", 0);

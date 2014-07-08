@@ -41,6 +41,8 @@
 *        Read dateobs
 *     2014-06-30 (AGM):
 *        Read instrument name and band name
+*     2014-07-08 (AGM):
+*        Read scan speed
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -269,6 +271,19 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
   if (h5error < 0) {
     snprintf(message, CCATSIM_MESSAGE_LEN,
              "could not read dataset '%s'", CCATSIM_SAMPRATE_NAME);
+    ccatsim_error(message, status);
+    return;
+  }
+
+  /* scan speed */
+  ccatsim_check_dset(data, CCATSIM_SCANSPEED_NAME, CCATSIM_SCANSPEED_RANK,
+                     dims, CCATSIM_SCANSPEED_UNIT, status);
+  if (*status != SAI__OK) return;
+  h5error = H5LTread_dataset(data->file_id, CCATSIM_SCANSPEED_NAME,
+                             H5T_NATIVE_DOUBLE, &(data->scan_speed));
+  if (h5error < 0) {
+    snprintf(message, CCATSIM_MESSAGE_LEN,
+             "could not read dataset '%s'", CCATSIM_SCANSPEED_NAME);
     ccatsim_error(message, status);
     return;
   }
