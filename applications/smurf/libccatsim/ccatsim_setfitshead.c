@@ -43,6 +43,7 @@
 *     2014-07-09 (AGM):
 *        Add MAP_PA header
 *        Convert WAVELEN to [m]
+*        Add OBSGEO headers
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -94,6 +95,11 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
   int date_mn;
   double date_sc;
 
+  double obsgeo[3];       /* obsgeo array for header */
+  double phi;             /* tel latitude in radians (+pi/2 is north)*/
+  double h;               /* tel altitude in metres */
+  double lambda;          /* tel longitude in radians (east is positive) */
+
   /* wavelength (from bandname field) */
   double wavelen;
   char *endptr;           /* used for error checking in conversion */
@@ -137,11 +143,20 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
     /* utdate */
     utdate = date_yr*10000 + date_mo*100 + date_da;
 
+    /* obsgeo */
+    phi = data->telpos[1]*AST__DD2R;
+    lambda = data->telpos[0]*AST__DD2R;
+    h = data->telpos[2];
+    smf_terr(phi, h, lambda, obsgeo);
+
     astSetFitsI(fitschan, "NUMDET", data->ndet, "number of detectors", 0);
     astSetFitsI(fitschan, "NUMSAMP", data->nsamp, "number of samples", 0);
     astSetFitsS(fitschan, "TELESCOP", data->telname, "Name of telescope", 0);
     astSetFitsS(fitschan, "INSTRUME", data->instname, "Name of instrument", 0);
     astSetFitsF(fitschan, "WAVELEN", wavelen, "[m] Observing wavelength", 0);
+    astSetFitsF(fitschan, "OBSGEO-X", obsgeo[0], "[m]", 0);
+    astSetFitsF(fitschan, "OBSGEO-Y", obsgeo[1], "[m]", 0);
+    astSetFitsF(fitschan, "OBSGEO-Z", obsgeo[2], "[m]", 0);
     astSetFitsS(fitschan, "DATE-OBS", data->dateobs, "Observation Date", 0);
     astSetFitsS(fitschan, "OBSID", obsid, "Unique observation identifier", 0);
     astSetFitsS(fitschan, "OBSIDSS", obsidss, "Unique observation identifier (w/ subsystem)", 0);
