@@ -7,6 +7,7 @@ C_ROUTINES = \
 	ccatsim_check_dset.c \
 	ccatsim_closefile.c \
 	ccatsim_error.c \
+	ccatsim_fill_smfHead.c \
 	ccatsim_getdata.c \
 	ccatsim_getstring.c \
 	ccatsim_openfile.c \

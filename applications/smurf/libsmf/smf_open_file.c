@@ -59,6 +59,7 @@
  *     David Berry (JAC, UCLan)
  *     Malcolm J. Currie (Starlink)
  *     COBA: Coskun Oba (UoL)
+ *     AGM: Gaelen Marsden (UBC)
  *     {enter_new_authors_here}
 
  *  History:
@@ -248,12 +249,14 @@
  *        Use the STEPTIME and SCANVEL values from the SMURF extension, if
  *        any, in preference to the FITS headers. These extension items are
  *        created by makemap when exporting cleaned time series data.
+ *     2014-07-09 (AGM):
+ *        Add call to ccatsim_fill_smfHead for CCAT data
  *     {enter_further_changes_here}
 
  *  Copyright:
  *     Copyright (C) 2007-2014 Science and Technology Facilities Council.
  *     Copyright (C) 2005-2007 Particle Physics and Astronomy Research Council.
- *     Copyright (C) 2005-2008,2010-2011 University of British Columbia.
+ *     Copyright (C) 2005-2008,2010-2011,2014 University of British Columbia.
  *     All Rights Reserved.
 
  *  Licence:
@@ -304,6 +307,7 @@
 /* SMURF includes */
 #include "libacsis/acsis.h"
 #include "libaztec/aztec.h"
+#include "libccatsim/ccatsim.h"
 
 static char * smf__read_ocsconfig ( int ndfid, int *status);
 static void smf1_open_file_caller( void *data, int *status );
@@ -960,6 +964,9 @@ void smf_open_file( ThrWorkForce *wf, const Grp * igrp, size_t index,
           break;
         case INST__AZTEC:
           aztec_fill_smfHead( hdr, NDF__NOID, status );
+          break;
+        case INST__SWCAM:
+          ccatsim_fill_smfHead( hdr, indf, status );
           break;
         default:
           break;

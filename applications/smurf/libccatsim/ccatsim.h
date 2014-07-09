@@ -45,6 +45,8 @@
 *        Add more required headers
 *        Remove fill/free_smfHead
 *        Add writebolo routine and defines
+*     2014-07-09 (AGM):
+*        Add ccatsim_fill_smfHead back in (w/ correct usage this time)
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -208,9 +210,9 @@ typedef struct ccatsim_data {
 } ccatsim_data;
 
 
-/***************************
- * public access functions *
- ***************************/
+/******************************************
+ * public access functions                *
+ ******************************************/
 
 /* open file and fill data structure */
 void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status);
@@ -231,9 +233,10 @@ void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status);
 /* write bolo locations to ndf extension */
 void ccatsim_writebolo(const ccatsim_data *data, int indf, int *status);
 
-/****************************
- * private access functions *
- ****************************/
+
+/******************************************
+ * private access functions               *
+ ******************************************/
 
 /* handle hdf5 error */
 void ccatsim_error(const char *msg, int *status);
@@ -245,5 +248,14 @@ void ccatsim_check_dset(const ccatsim_data *data, const char *dsetname, int rank
 /* read a single string from data file */
 void ccatsim_getstring(const ccatsim_data *data, const char *dsetname, int maxstrlen,
                        char *string, int *status);
+
+
+/******************************************
+ * functions to handle exported data      *
+ ******************************************/
+
+/* read bolo positions from exported ndf */
+void ccatsim_fill_smfHead(smfHead *hdr, int indf, int *status);
+
 
 #endif /* CCATSIM_H_DEFINED */
