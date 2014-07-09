@@ -47,6 +47,7 @@
 *        Add writebolo routine and defines
 *     2014-07-09 (AGM):
 *        Add ccatsim_fill_smfHead back in (w/ correct usage this time)
+*        Add MAP_PA header
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -188,6 +189,7 @@
 #define CCATSIM_SWMODE    "self"
 #define CCATSIM_OBSTYPE   "science"
 #define CCATSIM_INBEAM    ""
+#define CCATSIM_MAPPA     0.0
 
 /* data structure */
 typedef struct ccatsim_data {

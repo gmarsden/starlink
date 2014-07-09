@@ -40,6 +40,8 @@
 *     2014-07-08 (AGM):
 *        Add scan_speed
 *        Add more required headers
+*     2014-07-09 (AGM):
+*        Add MAP_PA header
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -157,6 +159,7 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
     astSetFitsS(fitschan, "INBEAM", CCATSIM_INBEAM, "Hardware in the beam", 0);
     astSetFitsF(fitschan, "STEPTIME", 1.0/data->sample_rate, "Samp steptime [s]", 0);
     astSetFitsF(fitschan, "SCAN_VEL", data->scan_speed/DAS2D, "[arcsec/s] Scan velocity", 0);
+    astSetFitsF(fitschan, "MAP_PA", CCATSIM_MAPPA, "[deg] Requested PA of map", 0);
 
     /* SEQSTART: assume that JCMTState rts_num starts at 0 and ends at nsamp-1 */
     astSetFitsI(fitschan, "SEQSTART", 0, "RTS index number of first frame", 0);
