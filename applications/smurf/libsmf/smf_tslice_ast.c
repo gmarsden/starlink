@@ -55,6 +55,7 @@
 *     David Berry (JAC, UCLan)
 *     Andy Gibb (UBC)
 *     Ed Chapin (UBC)
+*     AGM: Gaelen Marsden (UBC)
 *     {enter_new_authors_here}
 
 *  History:
@@ -104,6 +105,8 @@
 *        DUT1 setting moved to WCS routines.
 *     2009-12-09 (TIMJ):
 *        Trap bad telescope position.
+*     2014-07-09 (AGM):
+*        Handle INST__SWCAM
 *     {enter_further_changes_here}
 
 *  Notes:
@@ -238,6 +241,7 @@ void smf_tslice_ast (smfData * data, dim_t index, int needwcs,
       break;
 
     case INST__ACSIS:
+    case INST__SWCAM:
       /* For ACSIS data, use the .MORE.ACSIS.RECEPPOS values if they are
          still available in the smfHead. Otherwise, use the FPLANEX/Y values. */
 
