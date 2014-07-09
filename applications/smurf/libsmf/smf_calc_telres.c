@@ -33,6 +33,7 @@
 
 *  Authors:
 *     David Berry (JAC, UCLan)
+*     AGM: Gaelen Marsden (UBC)
 *     {enter_new_authors_here}
 
 *  History:
@@ -44,11 +45,14 @@
 *        Add SMT
 *     2014-04-10 (TIMJ):
 *        Add NANTEN2
+*     2014-07-09 (AGM):
+*        Add CCAT
 *     {enter_further_changes_here}
 
 *  Copyright:
 *     Copyright (C) 2008-2009 Science & Technology Facilities Council.
 *     Copyright (C) 2014 Cornell University.
+*     Copyright (C) 2014 University of British Columbia.
 *     All Rights Reserved.
 
 *  Licence:
@@ -171,6 +175,22 @@ float smf_calc_telres( AstFitsChan *hdr, int *status ) {
         }
 
         lambda = 2.0E-9 * AST__C / los;
+
+      } else if ( !strncmp( value, "CCAT", nc ) ) {
+
+        /* Diameter in metres */
+        diam = 25.0;
+
+        /* Get the wavelength */
+        if (  ! astGetFitsF( hdr, "WAVELEN", &dlambda ) ) {
+          if( *status == SAI__OK ) {
+            *status = SAI__ERROR;
+            errRep( "", "The \"WAVELEN\" FITS header was not found.",
+                    status );
+          }
+        }
+
+        lambda = dlambda;
 
 /* Report an error if we do not recognise the telescope. */
       } else {

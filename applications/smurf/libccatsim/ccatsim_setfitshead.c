@@ -42,6 +42,7 @@
 *        Add more required headers
 *     2014-07-09 (AGM):
 *        Add MAP_PA header
+*        Convert WAVELEN to [m]
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -131,6 +132,7 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
       msgSetc("NAME", CCATSIM_BAND_NAME);
       msgOutif(MSG__NORM, "", "Attribute '^NAME' is not numeric", status);
     }
+    wavelen *= 1e-6; /* convert to m */
 
     /* utdate */
     utdate = date_yr*10000 + date_mo*100 + date_da;
@@ -139,7 +141,7 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
     astSetFitsI(fitschan, "NUMSAMP", data->nsamp, "number of samples", 0);
     astSetFitsS(fitschan, "TELESCOP", data->telname, "Name of telescope", 0);
     astSetFitsS(fitschan, "INSTRUME", data->instname, "Name of instrument", 0);
-    astSetFitsF(fitschan, "WAVELEN", wavelen, "Observing wavelength", 0);
+    astSetFitsF(fitschan, "WAVELEN", wavelen, "[m] Observing wavelength", 0);
     astSetFitsS(fitschan, "DATE-OBS", data->dateobs, "Observation Date", 0);
     astSetFitsS(fitschan, "OBSID", obsid, "Unique observation identifier", 0);
     astSetFitsS(fitschan, "OBSIDSS", obsidss, "Unique observation identifier (w/ subsystem)", 0);
