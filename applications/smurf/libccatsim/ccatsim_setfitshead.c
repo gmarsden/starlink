@@ -44,6 +44,8 @@
 *        Add MAP_PA header
 *        Convert WAVELEN to [m]
 *        Add OBSGEO headers
+*     2014-07-10
+*        Add telescope OBS headers
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -154,6 +156,9 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
     astSetFitsS(fitschan, "TELESCOP", data->telname, "Name of telescope", 0);
     astSetFitsS(fitschan, "INSTRUME", data->instname, "Name of instrument", 0);
     astSetFitsF(fitschan, "WAVELEN", wavelen, "[m] Observing wavelength", 0);
+    astSetFitsF(fitschan, "ALT-OBS", data->telpos[2], "[m] Height of observatory", 0);
+    astSetFitsF(fitschan, "LAT-OBS", data->telpos[1], "[deg] Latitude of Observatory", 0);
+    astSetFitsF(fitschan, "LONG-OBS", data->telpos[0], "[deg] East longitude of observatory", 0);
     astSetFitsF(fitschan, "OBSGEO-X", obsgeo[0], "[m]", 0);
     astSetFitsF(fitschan, "OBSGEO-Y", obsgeo[1], "[m]", 0);
     astSetFitsF(fitschan, "OBSGEO-Z", obsgeo[2], "[m]", 0);
