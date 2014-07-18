@@ -32,6 +32,8 @@
 *        Initial version
 *     2014-07-03 (AGM):
 *        Make ccatsim_data* const
+*     2014-07-18 (AGM):
+*        Add sample time in DAYS instead of SECONDS onto mjd
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -167,7 +169,7 @@ void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status) {
   for (i=0; i<(unsigned int)(nframes); i++) {
 
     /* calculate mjd of sample */
-    mjd = data->start_mjd + i / data->sample_rate;
+    mjd = data->start_mjd + i / data->sample_rate / SPD;
 
     /* timing things */
     state[i].rts_num = i;
