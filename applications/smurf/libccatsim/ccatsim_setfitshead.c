@@ -169,6 +169,7 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
     astSetFitsF(fitschan, "DEC", data->srcpos[1], "Declination of observation [deg]", 0);
     astSetFitsS(fitschan, "OBJECT", CCATSIM_OBJECT, "Target of observation", 0);
     astSetFitsI(fitschan, "OBSNUM", CCATSIM_OBSNUM, "Observation number", 0);
+    astSetFitsI(fitschan, "NSUBSCAN", CCATSIM_NSUBSCAN, "Subscan number for this file", 0);
     astSetFitsI(fitschan, "UTDATE", utdate, "UT Date as integer in yyyymmdd format", 0);
     astSetFitsL(fitschan, "SIMULATE", CCATSIM_SIMULATE, "True if any data are simulated", 0);
     astSetFitsS(fitschan, "ARRAYID", CCATSIM_ARRAYID, "Manufacturer's serial number", 0);

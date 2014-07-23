@@ -179,6 +179,7 @@
 
 /* hard-coded header info */
 #define CCATSIM_OBSNUM    0
+#define CCATSIM_NSUBSCAN  1
 #define CCATSIM_OBJECT    "simulation"
 #define CCATSIM_SIMULATE  1
 #define CCATSIM_ARRAYID   "0000"
