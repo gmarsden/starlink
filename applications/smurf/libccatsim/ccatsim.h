@@ -48,6 +48,8 @@
 *     2014-07-09 (AGM):
 *        Add ccatsim_fill_smfHead back in (w/ correct usage this time)
 *        Add MAP_PA header
+*     2014-07-23 (AGM):
+*        Pass quality pointer to ccatsim_getdata()
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -136,6 +138,9 @@
 #define CCATSIM_DETDATA_RANK 2
 #define CCATSIM_DETDATA_UNIT "Jy"
 
+#define CCATSIM_SCANNUM_NAME "scan_number"
+#define CCATSIM_SCANNUM_RANK 1
+
 #define CCATSIM_TELLON_NAME  "telescope_longitude"
 #define CCATSIM_TELLON_RANK  1
 #define CCATSIM_TELLON_UNIT  "degrees"
@@ -192,6 +197,8 @@
 #define CCATSIM_INBEAM    ""
 #define CCATSIM_MAPPA     0.0
 
+#define CCATSIM_BAD_SCANNUM -1
+
 /* data structure */
 typedef struct ccatsim_data {
   int isopen;           /* flag stating if file is open */
@@ -224,7 +231,8 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status);
 void ccatsim_closefile(ccatsim_data *data, int *status);
 
 /* read detector data into array */
-void ccatsim_getdata(const ccatsim_data *data, double *dataptr, int *status);
+void ccatsim_getdata(const ccatsim_data *data, double *dataptr,
+                     unsigned char *quaptr, int *status);
 
 /* set fits headers */
 void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,

@@ -10,22 +10,23 @@
 *     ANSI C
 
 *  Invocation:
-*     void ccatsim_getdata(const ccatsim_data *data, double *dataptr, int *status);
+*     void ccatsim_getdata(const ccatsim_data *data, double *dataptr,
+*                          unsigned char *quaptr, int *status);
 
 *  Arguments:
 *     data = const ccatsim_data * (Given)
 *        Pointer to data structure from which hdr info will be read
 *     dataptr = double * (Returned)
 *        Pointer to data array. Memory should already be allocated.
+*     quaptr = unsigned char * (Returned)
+*        Pointer to data quality flag array. Memory for output should already
+*        be allocated. Quality not calculated if quaptr == NULL.
 *     status = int* (Given and Returned)
 *        Pointer to global status.
 
 *  Description:
-*     Read detector data into data array. data are stored with bolo index
-*     varying fastest.
-
-*  Notes:
-*     Data are stored on disk with bolo index varying
+*     Read detector data into data array and quality flag into quality array.
+*     Data are stored with bolo index varying fastest.
 
 *  Authors:
 *     AGM: Gaelen Marsden (UBC)
@@ -36,6 +37,8 @@
 *        Initial version
 *     2014-07-03 (AGM):
 *        Make ccatsim_data* const
+*     2014-07-23 (AGM):
+*        Add quality pointer
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -70,11 +73,16 @@
 
 #define EXTENSION "CCATSIM"
 
-void ccatsim_getdata(const ccatsim_data *data, double *dataptr, int *status) {
+void ccatsim_getdata(const ccatsim_data *data, double *dataptr,
+                     unsigned char *quaptr, int *status) {
 
   herr_t h5error;          /* hdf5 error status */
   hsize_t dims[CCATSIM_DETDATA_RANK]; /* dimensions */
   char message[CCATSIM_MESSAGE_LEN]; /* error message */
+
+  int ti;                  /* time loop index */
+  int di;                  /* detector loop index */
+  int *scannum = NULL;     /* scan number (for quality) */
 
   if (*status == SAI__OK) {
 
@@ -102,6 +110,46 @@ void ccatsim_getdata(const ccatsim_data *data, double *dataptr, int *status) {
                "could not read dataset '%s'", CCATSIM_DETDATA_NAME);
       ccatsim_error(message, status);
       return;
+    }
+
+    /* build quality if requested */
+    if (quaptr != NULL) {
+
+      /* read scan_number to build quality array */
+
+      /* check scan number */
+      ccatsim_check_dset(data, CCATSIM_SCANNUM_NAME, CCATSIM_SCANNUM_RANK,
+                         dims, NULL, status);
+      if (*status != SAI__OK) return;
+
+      /* allocate memory to store scan number */
+      scannum = astMalloc(data->nsamp*sizeof(*scannum));
+
+      /* read scan number */
+      h5error = H5LTread_dataset(data->file_id, CCATSIM_SCANNUM_NAME,
+                                 H5T_NATIVE_INT, scannum);
+
+      if (h5error < 0) {
+
+        snprintf(message, CCATSIM_MESSAGE_LEN,
+               "could not read dataset '%s'", CCATSIM_DETDATA_NAME);
+        ccatsim_error(message, status);
+
+      } else {
+
+        /* where scannum == -1, set quality to bad (SMF__Q_BADDA) */
+        for (ti=0; ti<data->nsamp; ti++) {
+          for (di=0; di<data->ndet; di++) {
+            quaptr[ti*data->ndet+di] =
+              (scannum[ti] == CCATSIM_BAD_SCANNUM) ?
+              SMF__Q_BADDA : 0;
+          }
+        }
+
+      }
+
+      /* free memory */
+      scannum = astFree(scannum);
     }
 
   }

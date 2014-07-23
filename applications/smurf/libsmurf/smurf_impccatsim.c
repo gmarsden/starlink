@@ -56,6 +56,8 @@
 *     2014-07-08 (AGM):
 *        Remove calls to smfHead (not needed)
 *        Add call to ccatsim_writebolo (writes bolo positions to ndf extension)
+*     2014-07-23 (AGM):
+*        Set QUALITY (based on value of -1 in scan_number)
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -151,6 +153,7 @@ void smurf_impccatsim( int *status ) {
   int nframes;                 /* number of time steps */
 
   double *full_bolosig=NULL;   /* all bolo signals [ndet x nsamp] */
+  unsigned char *full_boloqua=NULL; /* quality flag for bolo signals [ndet x nsamp] */
   AstFitsChan *fitschan=NULL;  /* FITS headers */
 
   /* set defaults */
@@ -212,12 +215,14 @@ void smurf_impccatsim( int *status ) {
 
   /* Map the data array */
   ndfMap( indf, "DATA", "_DOUBLE", "WRITE", &pntr, &nmap, status );
-
   full_bolosig = pntr;
+
+  ndfMap( indf, "QUALITY", "_UBYTE", "WRITE", &pntr, &nmap, status );
+  full_boloqua = pntr;
 
   /* read data into full_bolosig. */
   /* data are to be stored with detector index varying most quickly. */
-  ccatsim_getdata(&ccatdata, full_bolosig, status);
+  ccatsim_getdata(&ccatdata, full_bolosig, full_boloqua, status);
   if (*status != SAI__OK) goto CLEANUP;
 
   /* fits headers */
