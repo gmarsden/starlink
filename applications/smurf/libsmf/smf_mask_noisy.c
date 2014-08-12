@@ -109,7 +109,7 @@
 #include "sae_par.h"
 #include "mers.h"
 
-#define FUNC_NAME "smf_mask_noise"
+#define FUNC_NAME "smf_mask_noisy"
 
 void smf_mask_noisy( ThrWorkForce *wf, smfData *data, smfData **noise,
                      double sigcliphigh, double sigcliplow, int cliplog,
