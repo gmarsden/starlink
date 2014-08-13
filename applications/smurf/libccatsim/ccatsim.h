@@ -190,7 +190,7 @@
 #define CCATSIM_ARRAYID   "0000"
 #define CCATSIM_SEQCOUNT  1
 #define CCATSIM_SHUTTER   1
-#define CCATSIM_SUBARRAY  ""
+#define CCATSIM_SUBARRAY  "s4a"
 #define CCATSIM_SAMMODE   "scan"
 #define CCATSIM_SWMODE    "self"
 #define CCATSIM_OBSTYPE   "science"
