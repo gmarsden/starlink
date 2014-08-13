@@ -196,6 +196,7 @@
 #define CCATSIM_OBSTYPE   "science"
 #define CCATSIM_INBEAM    ""
 #define CCATSIM_MAPPA     0.0
+#define CCATSIM_DUT1      0.0
 
 #define CCATSIM_BAD_SCANNUM -1
 

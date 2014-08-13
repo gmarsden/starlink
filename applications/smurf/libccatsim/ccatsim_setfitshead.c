@@ -183,6 +183,7 @@ void ccatsim_setfitshead(const ccatsim_data *data, AstFitsChan *fitschan,
     astSetFitsF(fitschan, "STEPTIME", 1.0/data->sample_rate, "Samp steptime [s]", 0);
     astSetFitsF(fitschan, "SCAN_VEL", data->scan_speed/DAS2D, "[arcsec/s] Scan velocity", 0);
     astSetFitsF(fitschan, "MAP_PA", CCATSIM_MAPPA, "[deg] Requested PA of map", 0);
+    astSetFitsF(fitschan, "DUT1", CCATSIM_DUT1, "[d] UT1-UTC correction", 0);
 
     /* SEQSTART: assume that JCMTState rts_num starts at 0 and ends at nsamp-1 */
     astSetFitsI(fitschan, "SEQSTART", 0, "RTS index number of first frame", 0);
