@@ -39,6 +39,8 @@
 *        Make ccatsim_data* const
 *     2014-07-23 (AGM):
 *        Add quality pointer
+*     2014-08-13 (AGM):
+*        Set data to VAL__BADD when when setting qual
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -117,6 +119,9 @@ void ccatsim_getdata(const ccatsim_data *data, double *dataptr,
 
       /* read scan_number to build quality array */
 
+      /* first, initialize to zero */
+      memset(quaptr, 0, data->nsamp*data->ndet*sizeof(*quaptr));
+
       /* check scan number */
       ccatsim_check_dset(data, CCATSIM_SCANNUM_NAME, CCATSIM_SCANNUM_RANK,
                          dims, NULL, status);
@@ -137,12 +142,15 @@ void ccatsim_getdata(const ccatsim_data *data, double *dataptr,
 
       } else {
 
-        /* where scannum == -1, set quality to bad (SMF__Q_BADDA) */
         for (ti=0; ti<data->nsamp; ti++) {
           for (di=0; di<data->ndet; di++) {
-            quaptr[ti*data->ndet+di] =
-              (scannum[ti] == CCATSIM_BAD_SCANNUM) ?
-              SMF__Q_BADDA : 0;
+
+            /* where scannum == -1, set quality and data */
+            if (scannum[ti] == CCATSIM_BAD_SCANNUM) {
+              quaptr[ti*data->ndet+di] = SMF__Q_BADDA;
+              dataptr[ti*data->ndet+di] = VAL__BADD;
+            }
+
           }
         }
 
