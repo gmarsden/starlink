@@ -34,6 +34,8 @@
 *        Make ccatsim_data* const
 *     2014-07-18 (AGM):
 *        Add sample time in DAYS instead of SECONDS onto mjd
+*     2014-08-20 (AGM):
+*        Convert from J2000 to apparent
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -78,6 +80,8 @@ void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status) {
   double *bore_ra=NULL;    /* ra of telescope boresight */
   double *bore_dc=NULL;    /* dec of telescope boresight */
 
+  double ra_app;           /* apparent ra coord */
+  double dc_app;           /* apparent dec coord */
   double bore_az;          /* azimuth of telescope boresight */
   double bore_el;          /* elevation of telescope boresight */
   double mjd;              /* modified julian day of frame */
@@ -196,14 +200,24 @@ void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status) {
     /* az/el coordinate conversion */
 
     /* first, pointing center */
-    ha = (lst[i]*15 - data->srcpos[0]) * AST__DD2R; /* in radians */
-    palDe2h(ha, state[i].tcs_tr_bc2, data->telpos[1]*AST__DD2R, &bore_az, &bore_el);
+
+    /* convert to apparent ra/dec */
+    palMap(state[i].tcs_tr_bc1, state[i].tcs_tr_bc2, 0., 0., 0., 0., 2000., mjd,
+           &ra_app, &dc_app);
+
+    ha = lst[i]*15 * AST__DD2R - ra_app; /* in radians */
+    palDe2h(ha, dc_app, phi, &bore_az, &bore_el);
     state[i].tcs_az_bc1 = bore_az;
     state[i].tcs_az_bc2 = bore_el;
 
     /* now telescope boresight */
-    ha = lst[i] * 15.0 * AST__DD2R - bore_ra[i]; /* bore_ra already in rad */
-    palDe2h(ha, bore_dc[i], phi, &bore_az, &bore_el);
+
+    /* convert to apparent ra/dec */
+    palMap(bore_ra[i], bore_dc[i], 0., 0., 0., 0., 2000., mjd,
+           &ra_app, &dc_app);
+
+    ha = lst[i] * 15.0 * AST__DD2R - ra_app;
+    palDe2h(ha, dc_app, phi, &bore_az, &bore_el);
     state[i].tcs_az_ac1 = bore_az;
     state[i].tcs_az_ac2 = bore_el;
     state[i].tcs_az_dc1 = bore_az;
@@ -217,7 +231,7 @@ void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status) {
       /* calculate rotation w.r.t. az/el */
       /* PA is angle between direction to pole from direction to zenith, so
          rotation from RA/Dec to az/el is -PA */
-      ang = palPa(ha, bore_dc[i], phi);
+      ang = palPa(ha, dc_app, phi);
       state[i].tcs_az_ang = -ang;
     } else {
       /* focal plane rotation type not known */
