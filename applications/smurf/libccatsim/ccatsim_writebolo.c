@@ -30,6 +30,8 @@
 *  History:
 *     2014-07-08 (AGM):
 *        Initial Version
+*     2014-08-28 (AGM):
+*        Focal plane offset is now +X, not +RA
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -72,7 +74,6 @@ void ccatsim_writebolo(const ccatsim_data *data, int indf, int *status)
   double * fplanex = NULL; /* X coordinates in radians */
   double * fplaney = NULL; /* Y coordinates in radians */
   unsigned int i;          /* loop counter */
-  double xdir;             /* direction of +x */
 
   herr_t h5error;          /* hdf5 error status */
   hsize_t hdim;             /* dimension */
@@ -129,13 +130,10 @@ void ccatsim_writebolo(const ccatsim_data *data, int indf, int *status)
       return;
     }
 
-    /* if focal plane rotation is radec, switch X direction*/
-    xdir = (strcmp(data->fplane_rot, "radec") == 0) ? -1.0 : 1.0;
-
-    /* convert from deg to radians (and swap direction if necessary) */
+    /* convert from deg to radians */
     if (fplanex && fplaney) {
       for (i=0; i<(unsigned int)(data->ndet); i++) {
-	fplanex[i] *= xdir * AST__DD2R;
+	fplanex[i] *= AST__DD2R;
 	fplaney[i] *= AST__DD2R;
       }
     }

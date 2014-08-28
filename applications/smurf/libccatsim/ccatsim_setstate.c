@@ -36,6 +36,8 @@
 *        Add sample time in DAYS instead of SECONDS onto mjd
 *     2014-08-20 (AGM):
 *        Convert from J2000 to apparent
+*     2014-08-28 (AGM):
+*        Fix focal plane rotation angle (tcs_az_ang=+ang, not -ang)
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -230,9 +232,9 @@ void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status) {
 
       /* calculate rotation w.r.t. az/el */
       /* PA is angle between direction to pole from direction to zenith, so
-         rotation from RA/Dec to az/el is -PA */
+         rotation from RA/Dec to az/el is PA */
       ang = palPa(ha, dc_app, phi);
-      state[i].tcs_az_ang = -ang;
+      state[i].tcs_az_ang = ang;
     } else {
       /* focal plane rotation type not known */
       snprintf(message, CCATSIM_MESSAGE_LEN,
