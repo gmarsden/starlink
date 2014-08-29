@@ -35,17 +35,21 @@
 
  *  Authors:
  *     Tim Jenness (JAC, Hawaii)
+ *     AGM: Gaelen Marsden (UBC)
  *     {enter_new_authors_here}
 
  *  History:
  *     2010-01-08 (TIMJ):
  *        Initial Version
+ *     2014-08-29 (AGM):
+ *        Hack to handle SWCAM
 
  *  Notes:
  *     Only useful for SCUBA-2 at present.
 
  *  Copyright:
  *     Copyright (C) 2010 Science and Technology Facilities Council.
+ *     Copyright (C) 2014 University of British Columbia.
  *     All Rights Reserved.
 
  *  Licence:
@@ -82,7 +86,8 @@ smf_subinst_t smf_calc_subinst ( const smfHead * hdr, int * status ) {
   if (! smf_validate_smfHead( hdr, 1, 0, status ) ) return subinst;
 
   /* do not worry about non-SCUBA2 for now */
-  if ( hdr->instrument != INST__SCUBA2 ) return subinst;
+  if ( hdr->instrument != INST__SCUBA2 &&
+       hdr->instrument != INST__SWCAM ) return subinst;
 
   /* Keep things simple and just look at the WAVELEN header */
   smf_fits_getD(hdr, "WAVELEN", &lambda, status );
