@@ -43,6 +43,8 @@
 *        Read instrument name and band name
 *     2014-07-08 (AGM):
 *        Read scan speed
+*     2014-09-19 (AGM):
+*        Add dut1 (value set in header file)
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -287,6 +289,9 @@ void ccatsim_openfile(const char *filename, ccatsim_data *data, int *status)
     ccatsim_error(message, status);
     return;
   }
+
+  /* set dut1 (hack, since it's not set in simulated data) */
+  data->dut1 = CCATSIM_DUT1;
 
   /*****************************
    * general info              *

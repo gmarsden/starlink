@@ -50,6 +50,8 @@
 *        Add MAP_PA header
 *     2014-07-23 (AGM):
 *        Pass quality pointer to ccatsim_getdata()
+*     2014-09-19 (AGM):
+*        Add dut1 to data structure
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -196,6 +198,8 @@
 #define CCATSIM_OBSTYPE   "science"
 #define CCATSIM_INBEAM    ""
 #define CCATSIM_MAPPA     0.0
+
+/* ideally, this would be set by simulator */
 #define CCATSIM_DUT1      0.0
 
 #define CCATSIM_BAD_SCANNUM -1
@@ -218,6 +222,7 @@ typedef struct ccatsim_data {
   char bandname[CCATSIM_ATTR_LEN]; /* band name */
   char fplane_rot[CCATSIM_ATTR_LEN]; /* focal plane rotation type */
   char dateobs[CCATSIM_ATTR_LEN]; /* observation date/time */
+  double dut1;          /* difference between UTC and UT1 */
 } ccatsim_data;
 
 
