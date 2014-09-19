@@ -38,6 +38,8 @@
 *        Convert from J2000 to apparent
 *     2014-08-28 (AGM):
 *        Fix focal plane rotation angle (tcs_az_ang=+ang, not -ang)
+*     2014-09-19 (AGM):
+*        Convert UTC to TAI
 *     {enter_further_changes_here}
 
 *  Copyright:
@@ -91,6 +93,8 @@ void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status) {
   double phi;              /* observatory latitude in rad */
   double ang;              /* focal plane rotation angle */
   double airmass;          /* calculate airmass from elevation */
+
+  double taiutc;           /* UTC to TAI conversion (in seconds) */
 
   unsigned int i;          /* loop counter */
 
@@ -172,6 +176,9 @@ void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status) {
   /* observatory latitude */
   phi = data->telpos[1]*AST__DD2R;
 
+  /* UTC to TAI conversion */
+  taiutc = palDat(data->start_mjd);
+
   for (i=0; i<(unsigned int)(nframes); i++) {
 
     /* calculate mjd of sample */
@@ -179,8 +186,12 @@ void ccatsim_setstate(const ccatsim_data *data, JCMTState *state, int *status) {
 
     /* timing things */
     state[i].rts_num = i;
-    state[i].rts_end = mjd;
-    state[i].tcs_tai = mjd;
+
+    /* tai at centre of sample */
+    state[i].tcs_tai = mjd + (taiutc - data->dut1 + 0.5/data->sample_rate)/SPD;
+
+    /* tai at end of sample */
+    state[i].rts_end = state[i].tcs_tai + 0.5/data->sample_rate/SPD;
 
     /* tracking system */
     snprintf(state[i].tcs_tr_sys,6,"J2000");
